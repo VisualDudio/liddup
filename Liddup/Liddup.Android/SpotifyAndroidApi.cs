@@ -33,6 +33,10 @@ namespace Liddup.Droid
         private Metadata _metadata;
         private readonly OperationCallbackDelegate _operationCallbackDelegate = new OperationCallbackDelegate(() => LogStatus("Success!"), error => LogStatus("Error!"));
 
+        public string AccessToken { get; set; }
+
+        public bool IsLoggedIn => _spotifyPlayer != null && _spotifyPlayer.IsLoggedIn;
+
         public SpotifyAndroidApi()
         {
             if ((Activity)Forms.Context is MainActivity activity) activity.Destroy += HandleDestroy;
@@ -42,10 +46,6 @@ namespace Liddup.Droid
         {
             Spotify.DestroyPlayer(this);
         }
-
-        public string AccessToken { get; set; }
-
-        public bool IsLoggedIn => _spotifyPlayer != null && _spotifyPlayer.IsLoggedIn;
 
         public void Login()
         {

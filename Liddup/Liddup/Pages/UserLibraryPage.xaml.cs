@@ -17,14 +17,14 @@ namespace Liddup
             InitializeComponent();
         }
 
-        private void PlaylistsButton_OnClicked(object sender, EventArgs e)
+        private async void PlaylistsButton_OnClicked(object sender, EventArgs e)
         {
-            Navigation.PushAsync(new UserPlaylistsPage());
+            await Navigation.PushAsync(new UserPlaylistsPage());
         }
 
-        private void SongsButton_OnClicked(object sender, EventArgs e)
+        private async void SongsButton_OnClicked(object sender, EventArgs e)
         {
-            Navigation.PushAsync(new UserSongsPage());
+            await Navigation.PushAsync(new UserSongsPage());
         }
     }
 }
