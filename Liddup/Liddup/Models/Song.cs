@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Liddup.Models
 {
-    class Song
+    public class Song
     {
         public Song() : this("", "") { }
 
@@ -19,6 +19,8 @@ namespace Liddup.Models
         public string Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
+        public string Uri { get; set; }
+        public string SongSource { get; set; }
 
         public Dictionary<string, object> ToDictionary()
         {
