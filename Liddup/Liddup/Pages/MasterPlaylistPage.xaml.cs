@@ -18,7 +18,17 @@ namespace Liddup
         public MasterPlaylistPage()
         {
             InitializeComponent();
-            
+
+            MessagingCenter.Subscribe<UserPlaylistSongsPage, Song>(this, "AddSong", (sender, song) =>
+            {
+                _songs.Add(song);
+                MasterPlaylist.ItemsSource = _songs;
+            });
+        }
+
+        private async void AddSongsButton_OnClicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new MusicServicesPage());
         }
     }
 }

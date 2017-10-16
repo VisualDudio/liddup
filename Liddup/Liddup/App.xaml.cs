@@ -13,7 +13,7 @@ namespace Liddup
         {
             InitializeComponent();
 
-            MainPage = new NavigationPage(new MusicServicesPage());
+            MainPage = new NavigationPage(new MasterPlaylistPage());
         }
 
         protected override void OnStart()

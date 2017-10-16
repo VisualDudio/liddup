@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-
+using Liddup.Models;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -82,8 +82,18 @@ namespace Liddup
 
         private void UserPlaylistSongs_OnItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
-            var selectedTrack = (FullTrack) e.SelectedItem;
-            DependencyService.Get<ISpotifyApi>().PlayTrack(selectedTrack.Uri);
+            AddSong((FullTrack) e.SelectedItem);
+        }
+
+        private void AddSong(FullTrack track)
+        {
+            var song = new Song
+            {
+                Uri = track.Uri,
+                SongSource = "Spotify",
+                Title = track.Name
+            };
+            MessagingCenter.Send(this, "AddSong", song);
         }
     }
 }
