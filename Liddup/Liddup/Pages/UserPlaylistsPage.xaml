@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Liddup.UserPlaylistsPage"
+             x:Name="UserPlaylistsContentPage">
+    <ContentPage.Content>
+        <StackLayout>
+            <!--This is where the user is going to choose songs from his/her playlists from the chosen music provider.
+            UI-Wise there shouldn't be much in this xaml page, just like a ListView and the rest will get taken care of in
+            the code-behind-->
+            <ActivityIndicator IsRunning="{Binding Source={x:Reference UserPlaylistsContentPage}, Path=IsBusy}" Color="Blue"/>
+            <ListView x:Name="UserPlaylists" ItemSelected="UserPlaylists_OnItemSelected" CachingStrategy="RecycleElementAndDataTemplate">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextCell Text="{Binding Name}"/>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

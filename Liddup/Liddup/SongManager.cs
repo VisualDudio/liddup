@@ -4,26 +4,25 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Couchbase.Lite;
 using Liddup.Models;
 
 namespace Liddup
 {
-    class SongManager
+    public static class SongManager
     {
-        /*
         public delegate void ReloadDataDelegate();
 
-        private static readonly Database m_database;
+        private static readonly Database _database;
 
         static SongManager()
         {
-            m_database = Manager.SharedInstance.GetDatabase("liddupsongs");
+            _database = Manager.SharedInstance.GetDatabase("liddupsongs");
         }
 
         public static Song GetSong(string id)
         {
-            var doc = m_database.GetDocument(id);
+            var doc = _database.GetDocument(id);
             var props = doc.UserProperties;
             var song = new Song
             {
@@ -37,7 +36,7 @@ namespace Liddup
 
         public static ObservableCollection<Song> GetSongs()
         {
-            var query = m_database.CreateAllDocumentsQuery();
+            var query = _database.CreateAllDocumentsQuery();
             var results = query.Run();
             var songs = new ObservableCollection<Song>();
 
@@ -61,13 +60,13 @@ namespace Liddup
 
             if (song.Id == null)
             {
-                doc = m_database.CreateDocument();
+                doc = _database.CreateDocument();
                 doc.PutProperties(song.ToDictionary());
                 song.Id = doc.Id;
             }
             else
             {
-                doc = m_database.GetDocument(song.Id);
+                doc = _database.GetDocument(song.Id);
                 try
                 {
                     doc.Update(newRevision =>
@@ -87,14 +86,14 @@ namespace Liddup
 
         public static void DeleteSong(Song song)
         {
-            var doc = m_database.GetExistingDocument(song.Id);
+            var doc = _database.GetExistingDocument(song.Id);
             doc?.Delete();
         }
 
         public static void StartReplications(ReloadDataDelegate refresher)
         {
-            var pull = m_database.CreatePullReplication(CreateSyncUri());
-            var push = m_database.CreatePushReplication(CreateSyncUri());
+            var pull = _database.CreatePullReplication(CreateSyncUri());
+            var push = _database.CreatePushReplication(CreateSyncUri());
 
             pull.Continuous = true;
             push.Start();
@@ -131,6 +130,5 @@ namespace Liddup
 
             return syncUri;
         }
-    */
     }
 }
