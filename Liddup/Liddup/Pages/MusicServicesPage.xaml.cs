@@ -16,5 +16,13 @@ namespace Liddup
         {
             InitializeComponent();
         }
+
+        private async void ConnectSpotifyButton_OnClicked(object sender, EventArgs e)
+        {
+            if (!DependencyService.Get<ISpotifyApi>().IsLoggedIn)
+                DependencyService.Get<ISpotifyApi>().Login();
+
+            await Navigation.PushAsync(new UserLibraryPage());
+        }
     }
 }

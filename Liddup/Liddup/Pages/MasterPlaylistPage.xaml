@@ -8,6 +8,14 @@
             ListView (for the tracks), a few buttons for the audio player controls (skip, pause, etc. | Only the Host can use this),
             A button for users to add music (Should navigate to the MusicServicesPage). Understanding lists will be very very important
             to implement this page, so please try your best to learn how to properly use them.-->
+            <Button x:Name="AddSongsButton" Text="Add Songs" Clicked="AddSongsButton_OnClicked"/>
+            <ListView x:Name="MasterPlaylist" CachingStrategy="RecycleElementAndDataTemplate">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextCell Text="{Binding Title}"/>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

@@ -1,5 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="preferExternal" package="com.xamarin.liddup">
 	<uses-sdk android:minSdkVersion="15" />
-	<application android:label="Liddup.Android"></application>
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.INTERNET" />
+	<application android:label="Liddup.Android" android:icon="@drawable/icon">
+		<activity android:name="com.spotify.sdk.android.authentication.LoginActivity"></activity>
+	</application>
 </manifest>

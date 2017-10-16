@@ -6,6 +6,7 @@
         <StackLayout>
             <!--This is where a user can choose where he/she wants to add his/her music from. The simplest implementation of this would
             be a button for every provider (Spotify, SoundCloud, Apple Music (if on iOS), Local Music), but that might look ugly.-->
+            <Button Text="Connect with Spotify" x:Name="ConnectSpotifyButton" Clicked="ConnectSpotifyButton_OnClicked"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
