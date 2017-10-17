@@ -5,7 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Couchbase.Lite;
+
 using Liddup.Models;
+using Xamarin.Forms;
 
 namespace Liddup
 {
@@ -13,22 +15,45 @@ namespace Liddup
     {
         public delegate void ReloadDataDelegate();
 
-        private static readonly Database _database;
+        private static Database Database;
+        private static Manager Manager;
+        private const ushort Port = 5432;
+        private const string Scheme = "http";
+        private const string Host = "172.16.29.132";
+        private const string DatabaseName = "liddupsongs";
 
         static SongManager()
         {
-            _database = Manager.SharedInstance.GetDatabase("liddupsongs");
+           
+        }
+
+        public static void InitManager()
+        {
+            Manager = Manager.SharedInstance;
+            Database = Manager.GetDatabase(DatabaseName);
+            Database.Changed += Database_Changed;
+        }
+
+        private static void Database_Changed(object sender, DatabaseChangeEventArgs e)
+        {
+            var changes = e.Changes;
+
+            foreach (var change in changes)
+            {
+                System.Diagnostics.Debug.WriteLine(GetSong(change.DocumentId).Uri);
+            }
         }
 
         public static Song GetSong(string id)
         {
-            var doc = _database.GetDocument(id);
+            var doc = Database.GetDocument(id);
             var props = doc.UserProperties;
             var song = new Song
             {
                 Id = id,
                 Title = props["title"].ToString(),
-                Description = props["description"].ToString()
+                Description = props["description"].ToString(),
+                Uri = props["uri"].ToString()
             };
 
             return song;
@@ -36,7 +61,7 @@ namespace Liddup
 
         public static ObservableCollection<Song> GetSongs()
         {
-            var query = _database.CreateAllDocumentsQuery();
+            var query = Database.CreateAllDocumentsQuery();
             var results = query.Run();
             var songs = new ObservableCollection<Song>();
 
@@ -46,7 +71,8 @@ namespace Liddup
                 {
                     Id = row.DocumentId,
                     Title = row.Document.UserProperties["title"].ToString(),
-                    Description = row.Document.UserProperties["description"].ToString()
+                    Description = row.Document.UserProperties["description"].ToString(),
+                    Uri = row.Document.UserProperties["uri"].ToString()
                 };
                 songs.Add(song);
             }
@@ -60,13 +86,13 @@ namespace Liddup
 
             if (song.Id == null)
             {
-                doc = _database.CreateDocument();
+                doc = Database.CreateDocument();
                 doc.PutProperties(song.ToDictionary());
                 song.Id = doc.Id;
             }
             else
             {
-                doc = _database.GetDocument(song.Id);
+                doc = Database.GetDocument(song.Id);
                 try
                 {
                     doc.Update(newRevision =>
@@ -74,6 +100,7 @@ namespace Liddup
                         var props = newRevision.Properties;
                         props["title"] = song.Title;
                         props["description"] = song.Description;
+                        props["uri"] = song.Uri;
                         return true;
                     });
                 }
@@ -86,14 +113,19 @@ namespace Liddup
 
         public static void DeleteSong(Song song)
         {
-            var doc = _database.GetExistingDocument(song.Id);
+            var doc = Database.GetExistingDocument(song.Id);
             doc?.Delete();
+        }
+
+        public static void StartListener()
+        {
+            DependencyService.Get<IListener>().Start(Manager, Port);
         }
 
         public static void StartReplications(ReloadDataDelegate refresher)
         {
-            var pull = _database.CreatePullReplication(CreateSyncUri());
-            var push = _database.CreatePushReplication(CreateSyncUri());
+            var pull = Database.CreatePullReplication(CreateSyncUri());
+            var push = Database.CreatePushReplication(CreateSyncUri());
 
             pull.Continuous = true;
             push.Start();
@@ -113,14 +145,9 @@ namespace Liddup
         {
             Uri syncUri = null;
 
-            const string scheme = "http";
-            const string host = "172.16.29.132";
-            const string dbName = "liddupsongs";
-            const int port = 4984;
-
             try
             {
-                var uriBuilder = new UriBuilder(scheme, host, port, dbName);
+                var uriBuilder = new UriBuilder(Scheme, Host, Port, DatabaseName);
                 syncUri = uriBuilder.Uri;
             }
             catch

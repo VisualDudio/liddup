@@ -18,10 +18,18 @@ namespace Liddup
         public MasterPlaylistPage()
         {
             InitializeComponent();
+            SongManager.InitManager();
+            SongManager.StartListener();
+            SongManager.StartReplications(() =>
+            {
+                _songs = SongManager.GetSongs();
+                MasterPlaylist.ItemsSource = _songs;
+            });
 
             MessagingCenter.Subscribe<UserPlaylistSongsPage, Song>(this, "AddSong", (sender, song) =>
             {
                 _songs.Add(song);
+                SongManager.SaveSong(song);
                 MasterPlaylist.ItemsSource = _songs;
             });
         }

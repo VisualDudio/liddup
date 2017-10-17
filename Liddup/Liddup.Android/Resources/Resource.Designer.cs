@@ -26,6 +26,8 @@ namespace Liddup.Droid
 		
 		public static void UpdateIdValues()
 		{
+			global::Couchbase.Lite.Android.Resource.String.library_name = global::Liddup.Droid.Resource.String.library_name;
+			global::Couchbase.Lite.Listener.Android.Resource.String.library_name = global::Liddup.Droid.Resource.String.library_name;
 			global::Xamarin.Forms.Platform.Android.Resource.Attribute.actionBarSize = global::Liddup.Droid.Resource.Attribute.actionBarSize;
 		}
 		
@@ -3723,6 +3725,9 @@ namespace Liddup.Droid
 			
 			// aapt resource value: 0x7f09003e
 			public const int com_spotify_sdk_login_progress = 2131296318;
+			
+			// aapt resource value: 0x7f09003f
+			public const int library_name = 2131296319;
 			
 			// aapt resource value: 0x7f090000
 			public const int mr_button_content_description = 2131296256;
