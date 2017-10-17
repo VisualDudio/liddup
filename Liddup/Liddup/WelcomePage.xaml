@@ -13,11 +13,10 @@
         -> MusicServicesPage (if user clicks the 'add songs' button) -> UserPlaylistsPage (if user clicks a music provider)
         -> MasterPlaylistPage (if user clicks 'add to master playlist' button)-->   
     <AbsoluteLayout BackgroundColor="#e1e8f0">
-        <Label Text="Liddup!" FontSize="30" VerticalOptions="Center" HorizontalOptions="Center" BackgroundColor="#e1e8f0" TextColor="Black" AbsoluteLayout.LayoutBounds="0.5, 0, 100, 50" AbsoluteLayout.LayoutFlags="PositionProportional"/>
         <StackLayout AbsoluteLayout.LayoutBounds="0.5, 0.5" AbsoluteLayout.LayoutFlags="PositionProportional">
              <Button Text="Host" FontSize="44" HeightRequest="100" WidthRequest="200" VerticalOptions="Center" HorizontalOptions="Center" BackgroundColor="#6ed3cf" TextColor="White" Margin="0,0,0,30"/>
              <Button Text="Join" FontSize="44" HeightRequest="100" WidthRequest="200" VerticalOptions="Center" HorizontalOptions="Center" BackgroundColor="#6ed3cf" TextColor="White" />
         </StackLayout>
-        <Image Source="" VerticalOptions="Center" HorizontalOptions="Center" AbsoluteLayout.LayoutBounds="0.5, 0, 1000, 1100" AbsoluteLayout.LayoutFlags="PositionProportional"/>
+        <Image Source="liddup_logo.png" Margin="0,-30,0,0"/>
     </AbsoluteLayout>
 </ContentPage>

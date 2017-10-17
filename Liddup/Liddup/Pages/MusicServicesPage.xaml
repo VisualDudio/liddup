@@ -1,12 +1,19 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Liddup.MusicServicesPage">
     <ContentPage.Content>
-        <StackLayout>
             <!--This is where a user can choose where he/she wants to add his/her music from. The simplest implementation of this would
             be a button for every provider (Spotify, SoundCloud, Apple Music (if on iOS), Local Music), but that might look ugly.-->
-            <Button Text="Connect with Spotify" x:Name="ConnectSpotifyButton" Clicked="ConnectSpotifyButton_OnClicked"/>
-        </StackLayout>
+        <AbsoluteLayout BackgroundColor="#e1e8f0">
+        <BoxView BackgroundColor="#9068be" AbsoluteLayout.LayoutBounds="0, 0, 1000, 75" AbsoluteLayout.LayoutFlags="PositionProportional"></BoxView>
+        <BoxView BackgroundColor="#9068be" AbsoluteLayout.LayoutBounds="0, 1, 1000, 75" AbsoluteLayout.LayoutFlags="PositionProportional"></BoxView>
+        <Label Text="Add Music" FontSize="30" VerticalOptions="Center" HorizontalOptions="Center" BackgroundColor="#9068be" TextColor="White" AbsoluteLayout.LayoutBounds="0.5, 0, 200, 75" AbsoluteLayout.LayoutFlags="PositionProportional"/>
+            <StackLayout AbsoluteLayout.LayoutBounds="0.5, 0.5" AbsoluteLayout.LayoutFlags="PositionProportional">
+             <Button x:Name="ConnectSpotifyButton" Clicked="ConnectSpotifyButton_OnClicked" Text="Spotify" FontSize="30" HeightRequest="80" WidthRequest="250" VerticalOptions="Center" HorizontalOptions="Center" BackgroundColor="#6ed3cf" TextColor="White" Margin="0,0,0,30"/>
+             <Button Text="Soundcloud" FontSize="30" HeightRequest="80" WidthRequest="250" VerticalOptions="Center" HorizontalOptions="Center" BackgroundColor="#6ed3cf" TextColor="White" Margin="0,0,0,30"/>
+             <Button Text="Library" FontSize="30" HeightRequest="80" WidthRequest="250" VerticalOptions="Center" HorizontalOptions="Center" BackgroundColor="#6ed3cf" TextColor="White"/>
+            </StackLayout>
+        </AbsoluteLayout>
     </ContentPage.Content>
 </ContentPage>
