@@ -2,7 +2,8 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Liddup.UserPlaylistsPage"
-             x:Name="UserPlaylistsContentPage">
+             x:Name="UserPlaylistsContentPage"
+             NavigationPage.HasNavigationBar="False">
     <ContentPage.Content>
         <StackLayout>
             <!--This is where the user is going to choose songs from his/her playlists from the chosen music provider.

@@ -13,7 +13,8 @@ namespace Liddup
         {
             InitializeComponent();
 
-            MainPage = new NavigationPage(new MusicServicesPage());
+            Couchbase.Lite.Storage.SystemSQLite.Plugin.Register();
+            MainPage = new NavigationPage(new WelcomePage());
         }
 
         protected override void OnStart()

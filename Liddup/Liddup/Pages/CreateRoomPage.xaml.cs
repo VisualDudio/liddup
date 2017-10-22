@@ -16,5 +16,10 @@ namespace Liddup
         {
             InitializeComponent();
         }
+
+        private async void CreateRoomButton_OnClicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new MasterPlaylistPage(DependencyService.Get<INetworkManager>().GetIPAddress()));
+        }
     }
 }

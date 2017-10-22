@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using PCLStorage;
 
 namespace Liddup
 {
@@ -17,12 +18,17 @@ namespace Liddup
             InitializeComponent();
         }
 
-        private void ConnectSpotifyButton_OnClicked(object sender, EventArgs e)
+        private async void ConnectSpotifyButton_OnClicked(object sender, EventArgs e)
         {
             if (!DependencyService.Get<ISpotifyApi>().IsLoggedIn)
                 DependencyService.Get<ISpotifyApi>().Login();
 
-            Navigation.PushAsync(new UserLibraryPage());
+            await Navigation.PushAsync(new UserLibraryPage());
+        }
+
+        private void LibraryButton_OnClicked(object sender, EventArgs e)
+        {
+            
         }
     }
 }

@@ -5,19 +5,28 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Couchbase.Lite;
+
 using Liddup.Models;
+using Xamarin.Forms;
 
 namespace Liddup
 {
     public static class SongManager
     {
-        public delegate void ReloadDataDelegate();
+        public delegate void ReloadDataDelegate(object sender, ReplicationChangeEventArgs e);
+        public delegate void DatabaseChangedDelegate(object sender, DatabaseChangeEventArgs e);
 
-        private static readonly Database _database;
+        private static Database _database;
+        private static Manager _manager;
+        private const ushort Port = 5432;
+        private const string Scheme = "http";
+        public static string Host;
+        private const string DatabaseName = "liddupsongs4";
 
         static SongManager()
         {
-            _database = Manager.SharedInstance.GetDatabase("liddupsongs");
+            _manager = Manager.SharedInstance;
+            _database = _manager.GetDatabase(DatabaseName);
         }
 
         public static Song GetSong(string id)
@@ -28,7 +37,9 @@ namespace Liddup
             {
                 Id = id,
                 Title = props["title"].ToString(),
-                Description = props["description"].ToString()
+                Description = props["description"].ToString(),
+                Uri = props["uri"].ToString(),
+                Votes = Convert.ToInt32(props["votes"].ToString())
             };
 
             return song;
@@ -37,7 +48,8 @@ namespace Liddup
         public static ObservableCollection<Song> GetSongs()
         {
             var query = _database.CreateAllDocumentsQuery();
-            var results = query.Run();
+            var results = query.Run().OrderByDescending(x => x.Document.Properties["votes"]);
+
             var songs = new ObservableCollection<Song>();
 
             foreach (var row in results)
@@ -46,7 +58,9 @@ namespace Liddup
                 {
                     Id = row.DocumentId,
                     Title = row.Document.UserProperties["title"].ToString(),
-                    Description = row.Document.UserProperties["description"].ToString()
+                    Description = row.Document.UserProperties["description"].ToString(),
+                    Uri = row.Document.UserProperties["uri"].ToString(),
+                    Votes = Convert.ToInt32(row.Document.UserProperties["votes"].ToString())
                 };
                 songs.Add(song);
             }
@@ -72,8 +86,10 @@ namespace Liddup
                     doc.Update(newRevision =>
                     {
                         var props = newRevision.Properties;
+                        props["votes"] = song.Votes;
                         props["title"] = song.Title;
                         props["description"] = song.Description;
+                        props["uri"] = song.Uri;
                         return true;
                     });
                 }
@@ -90,22 +106,38 @@ namespace Liddup
             doc?.Delete();
         }
 
+        public static void StartListener()
+        {
+            DependencyService.Get<INetworkManager>().Start(_manager, Port);
+        }
+
+        public static void UpdateUI(DatabaseChangedDelegate updater)
+        {
+            _database.Changed += (sender, e) =>
+            {
+                updater?.Invoke(sender, e);
+            };
+        }
+
         public static void StartReplications(ReloadDataDelegate refresher)
         {
             var pull = _database.CreatePullReplication(CreateSyncUri());
             var push = _database.CreatePushReplication(CreateSyncUri());
 
             pull.Continuous = true;
+            push.Continuous = true;
+
+            pull.Start();
             push.Start();
 
             pull.Changed += (sender, e) =>
             {
-                refresher?.Invoke();
+                refresher?.Invoke(sender, e);
             };
 
             push.Changed += (sender, e) =>
             {
-                refresher?.Invoke();
+                refresher?.Invoke(sender, e);
             };
         }
 
@@ -113,14 +145,9 @@ namespace Liddup
         {
             Uri syncUri = null;
 
-            const string scheme = "http";
-            const string host = "172.16.29.132";
-            const string dbName = "liddupsongs";
-            const int port = 4984;
-
             try
             {
-                var uriBuilder = new UriBuilder(scheme, host, port, dbName);
+                var uriBuilder = new UriBuilder(Scheme, Host, Port, DatabaseName);
                 syncUri = uriBuilder.Uri;
             }
             catch
@@ -129,6 +156,11 @@ namespace Liddup
             }
 
             return syncUri;
+        }
+
+        public static void DeleteDatabase()
+        {
+            _database?.Delete();
         }
     }
 }

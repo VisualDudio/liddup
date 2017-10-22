@@ -1,29 +1,20 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
+﻿using Android.App;
 using Android.Content;
 using Android.Net;
-using Android.OS;
-using Android.Provider;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using Liddup.Droid;
 
 using Com.Spotify.Sdk.Android.Authentication;
 using Com.Spotify.Sdk.Android.Player;
 using Liddup.Droid.Delegates;
+using Liddup.Services;
 using Xamarin.Forms;
-using Xamarin.Forms.Platform.Android;
 using Error = Com.Spotify.Sdk.Android.Player.Error;
 
-[assembly: Dependency(typeof(SpotifyAndroidApi))]
+[assembly: Dependency(typeof(SpotifyApiAndroid))]
 //TODO: Implement OnResume() and other MainActivity-invoked events
 namespace Liddup.Droid
 {
-    class SpotifyAndroidApi : Java.Lang.Object, ISpotifyApi, IPlayerNotificationCallback, IConnectionStateCallback
+    class SpotifyApiAndroid : Java.Lang.Object, ISpotifyApi, IPlayerNotificationCallback, IConnectionStateCallback
     {
         public const string ClientId = "969187cf9a3c48879a4c8e7376435aa3";
         public const string RedirectUri = "testschema://callback";
@@ -33,7 +24,11 @@ namespace Liddup.Droid
         private Metadata _metadata;
         private readonly OperationCallbackDelegate _operationCallbackDelegate = new OperationCallbackDelegate(() => LogStatus("Success!"), error => LogStatus("Error!"));
 
-        public SpotifyAndroidApi()
+        public string AccessToken { get; set; }
+
+        public bool IsLoggedIn => _spotifyPlayer != null && _spotifyPlayer.IsLoggedIn;
+
+        public SpotifyApiAndroid()
         {
             if ((Activity)Forms.Context is MainActivity activity) activity.Destroy += HandleDestroy;
         }
@@ -42,10 +37,6 @@ namespace Liddup.Droid
         {
             Spotify.DestroyPlayer(this);
         }
-
-        public string AccessToken { get; set; }
-
-        public bool IsLoggedIn => _spotifyPlayer != null && _spotifyPlayer.IsLoggedIn;
 
         public void Login()
         {
