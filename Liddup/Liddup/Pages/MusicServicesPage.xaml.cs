@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using PCLStorage;
 
 namespace Liddup
 {
@@ -23,6 +24,11 @@ namespace Liddup
                 DependencyService.Get<ISpotifyApi>().Login();
 
             await Navigation.PushAsync(new UserLibraryPage());
+        }
+
+        private void LibraryButton_OnClicked(object sender, EventArgs e)
+        {
+            
         }
     }
 }

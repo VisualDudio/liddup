@@ -8,13 +8,15 @@ using UIKit;
 
 using SpotifyBindingiOS;
 using Liddup.iOS;
+using Liddup.Services;
 using Xamarin.Forms;
 
 using ObjCRuntime;
 
+[assembly: Dependency(typeof(SpotifyApiiOS))]
 namespace Liddup.iOS
 {
-    class SpotifyiOSApi : SPTAudioStreamingDelegate, ISpotifyApi
+    class SpotifyApiiOS : SPTAudioStreamingDelegate, ISpotifyApi
     {
         SPTAuth auth = SPTAuth.DefaultInstance;
         private readonly string _clientId = SpotifyApiConstants.ClientId;

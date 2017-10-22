@@ -8,8 +8,12 @@ using Couchbase.Lite;
 
 namespace Liddup
 {
-    public interface IListener
+    public interface INetworkManager
     {
         void Start(Manager manager, ushort port);
+        string GetIPAddress();
+        string GetEncryptedIPAddress(string ip);
+        string GetDecryptedIPAddress(string ip);
+        void SetHotSpot(bool on);
     }
 }

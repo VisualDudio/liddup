@@ -1,13 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Liddup.Annotations;
 
 namespace Liddup.Models
 {
-    public class Song
+    public class Song : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private int _votes;
+
         public Song() : this("", "") { }
 
         public Song(string title, string description)
@@ -21,7 +28,19 @@ namespace Liddup.Models
         public string Description { get; set; }
         public string Uri { get; set; }
         public string SongSource { get; set; }
-        public int Votes { get; set; }
+
+        public int Votes
+        {
+            get => _votes;
+            set
+            {
+                if (_votes == value)
+                    return;
+                _votes = value;
+
+                OnPropertyChanged();
+            }
+        }
 
         public Dictionary<string, object> ToDictionary()
         {
@@ -31,10 +50,17 @@ namespace Liddup.Models
                 {"description", Description },
                 {"uri", Uri },
                 {"songsource", SongSource },
-                {"votes", Votes }
+                {"votes", _votes }
             };
 
             return dictionary;
+        }
+
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

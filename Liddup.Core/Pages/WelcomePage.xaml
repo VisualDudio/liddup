@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:Liddup"
+             x:Class="Liddup.Pages.WelcomePage"
+             NavigationPage.HasNavigationBar="False">
+    <!--This is the page the app starts in, it will probably have just a Host button and a Join button. The other alternative is
+        to have a Host button and then a list of nearby playlists a user can join. If you choose the former, we need an additional
+        Content Page titled something like "NearbyPlaylistsPage". Also it would be nice to call the 'playlists' something less verbose.
+        
+        Note: All navigation will be done in the code-behind
+        
+        The navigation flow should be: WelcomePage -> CreateRoomPage (if user clicks Host) | MasterPlaylistPage (if user clicks a nearby playlist)
+        -> MusicServicesPage (if user clicks the 'add songs' button) -> UserPlaylistsPage (if user clicks a music provider)
+        -> MasterPlaylistPage (if user clicks 'add to master playlist' button)-->
+
+    <AbsoluteLayout BackgroundColor="#e1e8f0">
+        <Image Source="liddup_logo.png" VerticalOptions="Center" HorizontalOptions="Center" AbsoluteLayout.LayoutBounds="0.5, 0, 0.75, 0.25" AbsoluteLayout.LayoutFlags="PositionProportional, SizeProportional"/>
+        <StackLayout AbsoluteLayout.LayoutBounds="0.5, 0.5" AbsoluteLayout.LayoutFlags="PositionProportional">
+            <Button x:Name="HostButton" Clicked="HostButton_OnClicked" Text="Host" FontSize="44" HeightRequest="100" WidthRequest="200" VerticalOptions="Center" HorizontalOptions="Center" BackgroundColor="#6ed3cf" TextColor="White" Margin="0,0,0,30"/>
+            <Entry x:Name="RoomCodeEntry" Placeholder="Room Code"></Entry>
+            <Button x:Name="JoinButton" Clicked="JoinButton_OnClicked" Text="Join" FontSize="44" HeightRequest="100" WidthRequest="200" VerticalOptions="Center" HorizontalOptions="Center" BackgroundColor="#6ed3cf" TextColor="White" />
+        </StackLayout>
+    </AbsoluteLayout>
+</ContentPage>

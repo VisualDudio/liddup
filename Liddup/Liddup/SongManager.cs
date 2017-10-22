@@ -13,47 +13,33 @@ namespace Liddup
 {
     public static class SongManager
     {
-        public delegate void ReloadDataDelegate();
+        public delegate void ReloadDataDelegate(object sender, ReplicationChangeEventArgs e);
+        public delegate void DatabaseChangedDelegate(object sender, DatabaseChangeEventArgs e);
 
-        private static Database Database;
-        private static Manager Manager;
+        private static Database _database;
+        private static Manager _manager;
         private const ushort Port = 5432;
         private const string Scheme = "http";
-        private const string Host = "172.16.29.132";
-        private const string DatabaseName = "liddupsongs";
+        public static string Host;
+        private const string DatabaseName = "liddupsongs4";
 
         static SongManager()
         {
-           
-        }
-
-        public static void InitManager()
-        {
-            Manager = Manager.SharedInstance;
-            Database = Manager.GetDatabase(DatabaseName);
-            Database.Changed += Database_Changed;
-        }
-
-        private static void Database_Changed(object sender, DatabaseChangeEventArgs e)
-        {
-            var changes = e.Changes;
-
-            foreach (var change in changes)
-            {
-                System.Diagnostics.Debug.WriteLine(GetSong(change.DocumentId).Uri);
-            }
+            _manager = Manager.SharedInstance;
+            _database = _manager.GetDatabase(DatabaseName);
         }
 
         public static Song GetSong(string id)
         {
-            var doc = Database.GetDocument(id);
+            var doc = _database.GetDocument(id);
             var props = doc.UserProperties;
             var song = new Song
             {
                 Id = id,
                 Title = props["title"].ToString(),
                 Description = props["description"].ToString(),
-                Uri = props["uri"].ToString()
+                Uri = props["uri"].ToString(),
+                Votes = Convert.ToInt32(props["votes"].ToString())
             };
 
             return song;
@@ -61,8 +47,9 @@ namespace Liddup
 
         public static ObservableCollection<Song> GetSongs()
         {
-            var query = Database.CreateAllDocumentsQuery();
-            var results = query.Run();
+            var query = _database.CreateAllDocumentsQuery();
+            var results = query.Run().OrderByDescending(x => x.Document.Properties["votes"]);
+
             var songs = new ObservableCollection<Song>();
 
             foreach (var row in results)
@@ -72,7 +59,8 @@ namespace Liddup
                     Id = row.DocumentId,
                     Title = row.Document.UserProperties["title"].ToString(),
                     Description = row.Document.UserProperties["description"].ToString(),
-                    Uri = row.Document.UserProperties["uri"].ToString()
+                    Uri = row.Document.UserProperties["uri"].ToString(),
+                    Votes = Convert.ToInt32(row.Document.UserProperties["votes"].ToString())
                 };
                 songs.Add(song);
             }
@@ -86,18 +74,19 @@ namespace Liddup
 
             if (song.Id == null)
             {
-                doc = Database.CreateDocument();
+                doc = _database.CreateDocument();
                 doc.PutProperties(song.ToDictionary());
                 song.Id = doc.Id;
             }
             else
             {
-                doc = Database.GetDocument(song.Id);
+                doc = _database.GetDocument(song.Id);
                 try
                 {
                     doc.Update(newRevision =>
                     {
                         var props = newRevision.Properties;
+                        props["votes"] = song.Votes;
                         props["title"] = song.Title;
                         props["description"] = song.Description;
                         props["uri"] = song.Uri;
@@ -113,31 +102,42 @@ namespace Liddup
 
         public static void DeleteSong(Song song)
         {
-            var doc = Database.GetExistingDocument(song.Id);
+            var doc = _database.GetExistingDocument(song.Id);
             doc?.Delete();
         }
 
         public static void StartListener()
         {
-            DependencyService.Get<IListener>().Start(Manager, Port);
+            DependencyService.Get<INetworkManager>().Start(_manager, Port);
+        }
+
+        public static void UpdateUI(DatabaseChangedDelegate updater)
+        {
+            _database.Changed += (sender, e) =>
+            {
+                updater?.Invoke(sender, e);
+            };
         }
 
         public static void StartReplications(ReloadDataDelegate refresher)
         {
-            var pull = Database.CreatePullReplication(CreateSyncUri());
-            var push = Database.CreatePushReplication(CreateSyncUri());
+            var pull = _database.CreatePullReplication(CreateSyncUri());
+            var push = _database.CreatePushReplication(CreateSyncUri());
 
             pull.Continuous = true;
+            push.Continuous = true;
+
+            pull.Start();
             push.Start();
 
             pull.Changed += (sender, e) =>
             {
-                refresher?.Invoke();
+                refresher?.Invoke(sender, e);
             };
 
             push.Changed += (sender, e) =>
             {
-                refresher?.Invoke();
+                refresher?.Invoke(sender, e);
             };
         }
 
@@ -156,6 +156,11 @@ namespace Liddup
             }
 
             return syncUri;
+        }
+
+        public static void DeleteDatabase()
+        {
+            _database?.Delete();
         }
     }
 }

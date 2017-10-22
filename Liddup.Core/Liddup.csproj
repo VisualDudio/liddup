@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageTargetFallback>$(PackageTargetFallback);portable-win+net45+wp8+win81+wpa8</PackageTargetFallback>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Couchbase.Lite-PCL" Version="1.4.0" />
+    <PackageReference Include="Microsoft.NETCore.Portable.Compatibility" Version="1.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    <PackageReference Include="PCLStorage" Version="1.0.2" />
+    <PackageReference Include="SpotifyAPI-NET" Version="2.16.0" />
+    <PackageReference Include="Xamarin.Forms" Version="2.4.0.18342" />
+    <PackageReference Include="Zeroconf" Version="2.9.0" />
+  </ItemGroup>
+
+</Project>

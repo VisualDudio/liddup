@@ -91,7 +91,8 @@ namespace Liddup
             {
                 Uri = track.Uri,
                 SongSource = "Spotify",
-                Title = track.Name
+                Title = track.Name,
+                Votes = 0
             };
             MessagingCenter.Send(this, "AddSong", song);
         }

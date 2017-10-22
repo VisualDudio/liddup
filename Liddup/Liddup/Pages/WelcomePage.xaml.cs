@@ -7,11 +7,21 @@ using Xamarin.Forms;
 
 namespace Liddup
 {
-    public partial class MainPage : ContentPage
+    public partial class WelcomePage : ContentPage
     {
-        public MainPage()
+        public WelcomePage()
         {
             InitializeComponent();
+        }
+
+        private async void JoinButton_OnClicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new MasterPlaylistPage(DependencyService.Get<INetworkManager>().GetDecryptedIPAddress(RoomCodeEntry.Text)));
+        }
+
+        private async void HostButton_OnClicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new CreateRoomPage());
         }
     }
 }
