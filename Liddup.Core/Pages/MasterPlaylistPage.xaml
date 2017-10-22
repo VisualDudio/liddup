@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Liddup.Pages.MasterPlaylistPage"
+             NavigationPage.HasNavigationBar="false">
+    <ContentPage.Content>
+        <!--This is where the user will spend most of his/her time so it's the most important page. UI-Wise this will contain a
+            ListView (for the tracks), a few buttons for the audio player controls (skip, pause, etc. | Only the Host can use this),
+            A button for users to add music (Should navigate to the MusicServicesPage). Understanding lists will be very very important
+            to implement this page, so please try your best to learn how to properly use them.-->
+        <AbsoluteLayout BackgroundColor="#e1e8f0">
+            <ListView x:Name="MasterPlaylist" CachingStrategy="RecycleElementAndDataTemplate" AbsoluteLayout.LayoutBounds="0, .5, 1, 0.75" AbsoluteLayout.LayoutFlags="PositionProportional, SizeProportional">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal" Padding="5">
+                                <Label Text="{Binding Title}"/>
+                                <Button x:Name="VoteButton" Clicked="VoteButton_OnClicked" Text="{Binding Votes}" CommandParameter="{Binding .}"/>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="Fill" VerticalOptions="End">
+                <!--<BoxView BackgroundColor="#9068be" AbsoluteLayout.LayoutBounds="0, 0, 1000, 75" AbsoluteLayout.LayoutFlags="PositionProportional"></BoxView>
+                <Label Text="Master Playlist" FontSize="30" VerticalOptions="Center" HorizontalOptions="Center" BackgroundColor="#9068be" TextColor="White" AbsoluteLayout.LayoutBounds="0.5, 0, 200, 75" AbsoluteLayout.LayoutFlags="PositionProportional"/>-->
+                <Button Text="+" x:Name="AddSongsButton" Clicked="AddSongsButton_OnClicked" FontSize="20" HeightRequest="45" WidthRequest="45" BackgroundColor="#f44242" TextColor="White" AbsoluteLayout.LayoutBounds="315, 15, 40, 40"/>
+                <Label x:Name="RoomCodeLabel"/>
+                <Button x:Name="DeleteButton" Clicked="DeleteButton_OnClicked" Text="Delete"/>
+            </StackLayout>
+            <!--<BoxView BackgroundColor="#9068be" AbsoluteLayout.LayoutBounds="0, 1, 1000, 75" AbsoluteLayout.LayoutFlags="PositionProportional"></BoxView>-->
+        </AbsoluteLayout>
+    </ContentPage.Content>
+</ContentPage>
