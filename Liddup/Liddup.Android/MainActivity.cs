@@ -3,8 +3,11 @@
 using Android.App;
 using Android.Content;
 using Android.Content.PM;
+using Android.Net.Wifi;
 using Android.OS;
 using Liddup.Droid.Delegates;
+using Xamarin.Forms;
+using Liddup.Pages;
 
 namespace Liddup.Droid
 {
@@ -20,9 +23,11 @@ namespace Liddup.Droid
         {
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
+            
+            DependencyService.Register<NetworkManagerAndroid>();
 
             base.OnCreate(bundle);
-         
+
             global::Xamarin.Forms.Forms.Init(this, bundle);
             LoadApplication(new App());
         }
