@@ -118,6 +118,9 @@
     <BundleResource Include="Resources\Icon-Small%402x.png" />
     <BundleResource Include="Resources\Icon-Small%403x.png" />
     <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />
+    <BundleResource Include="Resources\liddup_logo.png" />
+    <BundleResource Include="Resources\liddup_logo%402x.png" />
+    <BundleResource Include="Resources\liddup_logo%403x.png" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Couchbase.Lite, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -212,8 +215,13 @@
     <BundleResource Include="Resources\liddup_logo.png" />
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
     <ProjectReference Include="..\..\Liddup.Core\Liddup.csproj">
       <Project>{2fb096a4-21fb-44b0-9ac8-950d553c0416}</Project>
+=======
+    <ProjectReference Include="..\Liddup\Liddup.csproj">
+      <Project>{5B9E05C9-26B7-4D34-9DFD-1A6A5CC5377D}</Project>
+>>>>>>> refs/remotes/origin/master
       <Name>Liddup</Name>
     </ProjectReference>
   </ItemGroup>
