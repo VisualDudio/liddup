@@ -89,6 +89,9 @@
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="DeezerApiiOS.cs" />
+    <Compile Include="FileSystemiOS.cs" />
+    <Compile Include="NapsterApiiOS.cs" />
     <Compile Include="NetworkManageriOS.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
@@ -141,6 +144,12 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.10.0.3\lib\netstandard1.3\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Plugin.MediaManager, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Plugin.MediaManager.0.4.5\lib\Xamarin.iOS10\Plugin.MediaManager.dll</HintPath>
+    </Reference>
+    <Reference Include="Plugin.MediaManager.Abstractions, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Plugin.MediaManager.0.4.5\lib\Xamarin.iOS10\Plugin.MediaManager.Abstractions.dll</HintPath>
     </Reference>
     <Reference Include="SpotifyAPI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\SpotifyAPI-NET.2.16.0\lib\SpotifyAPI.dll</HintPath>
@@ -215,13 +224,8 @@
     <BundleResource Include="Resources\liddup_logo.png" />
   </ItemGroup>
   <ItemGroup>
-<<<<<<< HEAD
-    <ProjectReference Include="..\..\Liddup.Core\Liddup.csproj">
-      <Project>{2fb096a4-21fb-44b0-9ac8-950d553c0416}</Project>
-=======
     <ProjectReference Include="..\Liddup\Liddup.csproj">
-      <Project>{5B9E05C9-26B7-4D34-9DFD-1A6A5CC5377D}</Project>
->>>>>>> refs/remotes/origin/master
+      <Project>{76bc3da3-c643-47ae-acb6-bef60bb64f25}</Project>
       <Name>Liddup</Name>
     </ProjectReference>
   </ItemGroup>

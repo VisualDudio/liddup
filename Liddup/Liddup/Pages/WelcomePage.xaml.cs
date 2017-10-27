@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Liddup.Services;
 using Xamarin.Forms;
 
-namespace Liddup
+namespace Liddup.Pages
 {
     public partial class WelcomePage : ContentPage
     {

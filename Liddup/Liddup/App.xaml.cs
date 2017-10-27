@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Liddup.Pages;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,6 @@ namespace Liddup
         public App()
         {
             InitializeComponent();
-
             Couchbase.Lite.Storage.SystemSQLite.Plugin.Register();
             MainPage = new NavigationPage(new WelcomePage());
         }

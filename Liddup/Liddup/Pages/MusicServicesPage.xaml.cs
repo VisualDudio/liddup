@@ -1,14 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+using Liddup.Services;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using PCLStorage;
 
-namespace Liddup
+using Plugin.MediaManager;
+
+using GoogleMusicApi.Common;
+using GoogleMusicApi.Structure;
+
+using TidalSharp.Models;
+using TidalSharp.Models.Static;
+using TidalSharp.Controllers;
+
+namespace Liddup.Pages
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MusicServicesPage : ContentPage
@@ -26,7 +30,12 @@ namespace Liddup
             await Navigation.PushAsync(new UserLibraryPage());
         }
 
-        private void LibraryButton_OnClicked(object sender, EventArgs e)
+        private async void LibraryButton_OnClicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new LibrarySongsPage());
+        }
+
+        private void ConnectGooglePlayMusicButton_OnClicked(object sender, EventArgs e)
         {
             
         }
