@@ -121,6 +121,9 @@
     <BundleResource Include="Resources\Icon-Small%402x.png" />
     <BundleResource Include="Resources\Icon-Small%403x.png" />
     <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />
+    <BundleResource Include="Resources\liddup_logo.png" />
+    <BundleResource Include="Resources\liddup_logo%402x.png" />
+    <BundleResource Include="Resources\liddup_logo%403x.png" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Couchbase.Lite, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
