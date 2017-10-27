@@ -100,6 +100,7 @@ namespace Liddup.Services
                     {
                         var props = newRevision.Properties;
                         props["votes"] = song.Votes;
+                        song.Id = newRevision.Id;
                         return true;
                     });
                 }
