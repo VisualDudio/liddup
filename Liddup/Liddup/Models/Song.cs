@@ -5,7 +5,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using Liddup.Annotations;
 
 namespace Liddup.Models
 {
@@ -14,20 +13,27 @@ namespace Liddup.Models
         public event PropertyChangedEventHandler PropertyChanged;
 
         private int _votes;
-
-        public Song() : this("", "") { }
-
-        public Song(string title, string description)
-        {
-            Title = title;
-            Description = description;
-        }
+        private bool _isPlaying;
 
         public string Id { get; set; }
         public string Title { get; set; }
-        public string Description { get; set; }
         public string Uri { get; set; }
         public string SongSource { get; set; }
+        public object AlbumArt { get; set; }
+        public byte[] Contents { get; set; }
+
+        public bool IsPlaying
+        {
+            get => _isPlaying;
+            set
+            {
+                if (_isPlaying == value)
+                    return;
+                _isPlaying = value;
+
+                OnPropertyChanged();
+            }
+        }
 
         public int Votes
         {
@@ -47,17 +53,15 @@ namespace Liddup.Models
             var dictionary = new Dictionary<string, object>
             {
                 {"title", Title },
-                {"description", Description },
                 {"uri", Uri },
                 {"songsource", SongSource },
-                {"votes", _votes }
+                {"votes", _votes },
+                {"isPlaying", _isPlaying }
             };
 
             return dictionary;
         }
 
-
-        [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

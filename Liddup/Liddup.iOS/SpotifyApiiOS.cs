@@ -19,8 +19,8 @@ namespace Liddup.iOS
     class SpotifyApiiOS : SPTAudioStreamingDelegate, ISpotifyApi
     {
         SPTAuth auth = SPTAuth.DefaultInstance;
-        private readonly string _clientId = SpotifyApiConstants.ClientId;
-        private readonly NSUrl _redirectUrl = new NSUrl(SpotifyApiConstants.RedirectUri);
+        private readonly string _clientId = ApiConstants.SpotifyClientId;
+        private readonly NSUrl _redirectUrl = new NSUrl(ApiConstants.SpotifyRedirectUri);
         private NSUrl _tokenSwapUrl;
         private NSUrl _tokenRefreshUrl;
         private string _sessionUserDefaultsKey;
@@ -49,12 +49,10 @@ namespace Liddup.iOS
 
         public void Login()
         {
-            
-
-            
             if (SPTAuth.SupportsApplicationAuthentication)
             {
                 var url = auth.LoginURL;
+                UIApplication.SharedApplication.OpenUrl(url);
             }
             else
             {

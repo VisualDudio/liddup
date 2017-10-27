@@ -1,27 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Couchbase.Lite;
 
 using Liddup.Models;
 using Xamarin.Forms;
 
-namespace Liddup
+namespace Liddup.Services
 {
     public static class SongManager
     {
         public delegate void ReloadDataDelegate(object sender, ReplicationChangeEventArgs e);
         public delegate void DatabaseChangedDelegate(object sender, DatabaseChangeEventArgs e);
 
-        private static Database _database;
-        private static Manager _manager;
-        private const ushort Port = 5432;
+        private static readonly Database _database;
+        private static readonly Manager _manager;
+        private const ushort Port = 5431;
         private const string Scheme = "http";
         public static string Host;
-        private const string DatabaseName = "liddupsongs4";
+        private const string DatabaseName = "liddupsongs05";
 
         static SongManager()
         {
@@ -37,32 +34,45 @@ namespace Liddup
             {
                 Id = id,
                 Title = props["title"].ToString(),
-                Description = props["description"].ToString(),
                 Uri = props["uri"].ToString(),
-                Votes = Convert.ToInt32(props["votes"].ToString())
+                Votes = Convert.ToInt32(props["votes"].ToString()),
+                SongSource = props["songsource"].ToString()
             };
 
             return song;
         }
 
+        public static byte[] GetSongContents(Song song)
+        {
+            return _database.GetDocument(song.Id).CurrentRevision.GetAttachment("contents").Content.ToArray();
+        }
+
         public static ObservableCollection<Song> GetSongs()
         {
             var query = _database.CreateAllDocumentsQuery();
-            var results = query.Run().OrderByDescending(x => x.Document.Properties["votes"]);
+            var results = query.Run().OrderBy(x => x.Document.Properties["votes"]);
 
             var songs = new ObservableCollection<Song>();
 
             foreach (var row in results)
             {
-                var song = new Song
+                try
                 {
-                    Id = row.DocumentId,
-                    Title = row.Document.UserProperties["title"].ToString(),
-                    Description = row.Document.UserProperties["description"].ToString(),
-                    Uri = row.Document.UserProperties["uri"].ToString(),
-                    Votes = Convert.ToInt32(row.Document.UserProperties["votes"].ToString())
-                };
-                songs.Add(song);
+                    var song = new Song
+                    {
+                        Id = row.Document.Id,
+                        Title = row.Document.UserProperties["title"].ToString(),
+                        Uri = row.Document.UserProperties["uri"].ToString(),
+                        Votes = Convert.ToInt32(row.Document.UserProperties["votes"].ToString()),
+                        SongSource = row.Document.UserProperties["songsource"].ToString()
+                    };
+                    songs.Add(song);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
             }
 
             return songs;
@@ -76,6 +86,9 @@ namespace Liddup
             {
                 doc = _database.CreateDocument();
                 doc.PutProperties(song.ToDictionary());
+                var newRevision = doc.CurrentRevision.CreateRevision();
+                newRevision.SetAttachment("contents", "audio/mpeg", song.Contents);
+                newRevision.Save();
                 song.Id = doc.Id;
             }
             else
@@ -87,9 +100,6 @@ namespace Liddup
                     {
                         var props = newRevision.Properties;
                         props["votes"] = song.Votes;
-                        props["title"] = song.Title;
-                        props["description"] = song.Description;
-                        props["uri"] = song.Uri;
                         return true;
                     });
                 }
@@ -152,7 +162,7 @@ namespace Liddup
             }
             catch
             {
-
+                System.Diagnostics.Debug.WriteLine("Error in creating sync uri!");
             }
 
             return syncUri;
@@ -161,6 +171,13 @@ namespace Liddup
         public static void DeleteDatabase()
         {
             _database?.Delete();
+        }
+
+        public static void DeleteDatabases()
+        {
+            var database = _manager.GetExistingDatabase(DatabaseName);
+            foreach (var doc in database.CreateAllDocumentsQuery().Run())
+                doc.Document.Delete();
         }
     }
 }

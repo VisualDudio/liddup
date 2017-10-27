@@ -86,6 +86,12 @@
     <Reference Include="PCLStorage.Abstractions, Version=1.0.2.0, Culture=neutral, PublicKeyToken=286fe515a2c35b64, processorArchitecture=MSIL">
       <HintPath>..\..\packages\PCLStorage.1.0.2\lib\monoandroid\PCLStorage.Abstractions.dll</HintPath>
     </Reference>
+    <Reference Include="Plugin.MediaManager, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Plugin.MediaManager.0.4.5\lib\MonoAndroid\Plugin.MediaManager.dll</HintPath>
+    </Reference>
+    <Reference Include="Plugin.MediaManager.Abstractions, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Plugin.MediaManager.0.4.5\lib\MonoAndroid\Plugin.MediaManager.Abstractions.dll</HintPath>
+    </Reference>
     <Reference Include="SpotifyAPI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\SpotifyAPI-NET.2.16.0\lib\SpotifyAPI.dll</HintPath>
     </Reference>
@@ -199,6 +205,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DeezerApiAndroid.cs" />
+    <Compile Include="FileSystemAndroid.cs" />
+    <Compile Include="NapsterApiAndroid.cs" />
     <Compile Include="NetworkManagerAndroid.cs" />
     <Compile Include="Delegates\ActivityResultEventArgs.cs" />
     <Compile Include="Delegates\DestroyEventArgs.cs" />
@@ -244,8 +253,8 @@
     <AndroidResource Include="Resources\drawable-xxhdpi\liddup_logo.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Liddup.Core\Liddup.csproj">
-      <Project>{2fb096a4-21fb-44b0-9ac8-950d553c0416}</Project>
+    <ProjectReference Include="..\Liddup\Liddup.csproj">
+      <Project>{76bc3da3-c643-47ae-acb6-bef60bb64f25}</Project>
       <Name>Liddup</Name>
     </ProjectReference>
   </ItemGroup>

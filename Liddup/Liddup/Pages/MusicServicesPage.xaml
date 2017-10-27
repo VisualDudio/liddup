@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Liddup.MusicServicesPage"
+             x:Class="Liddup.Pages.MusicServicesPage"
              NavigationPage.HasNavigationBar="False">
     <ContentPage.Content>
         <!--This is where a user can choose where he/she wants to add his/her music from. The simplest implementation of this would
@@ -12,7 +12,7 @@
             <Label Text="Add Music" FontSize="30" VerticalOptions="Center" HorizontalOptions="Center" BackgroundColor="#9068be" TextColor="White" AbsoluteLayout.LayoutBounds="0.5, 0, 200, 75" AbsoluteLayout.LayoutFlags="PositionProportional"/>
             <StackLayout AbsoluteLayout.LayoutBounds="0.5, 0.5" AbsoluteLayout.LayoutFlags="PositionProportional">
                 <Button x:Name="ConnectSpotifyButton" Clicked="ConnectSpotifyButton_OnClicked" Text="Spotify" FontSize="30" HeightRequest="80" WidthRequest="250" VerticalOptions="Center" HorizontalOptions="Center" BackgroundColor="#6ed3cf" TextColor="White" Margin="0,0,0,30"/>
-                <Button Text="Soundcloud" FontSize="30" HeightRequest="80" WidthRequest="250" VerticalOptions="Center" HorizontalOptions="Center" BackgroundColor="#6ed3cf" TextColor="White" Margin="0,0,0,30"/>
+                <Button x:Name="ConnectGooglePlayMusicButton" Clicked="ConnectGooglePlayMusicButton_OnClicked" Text="Google Play Music" FontSize="30" HeightRequest="80" WidthRequest="250" VerticalOptions="Center" HorizontalOptions="Center" BackgroundColor="#6ed3cf" TextColor="White" Margin="0,0,0,30"/>
                 <Button x:Name="LibraryButton" Clicked="LibraryButton_OnClicked" Text="Library" FontSize="30" HeightRequest="80" WidthRequest="250" VerticalOptions="Center" HorizontalOptions="Center" BackgroundColor="#6ed3cf" TextColor="White"/>
             </StackLayout>
         </AbsoluteLayout>

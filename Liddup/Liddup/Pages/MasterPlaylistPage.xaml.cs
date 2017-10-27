@@ -1,110 +1,95 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Liddup.Models;
+using Liddup.Services;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using System.Net;
-using Zeroconf;
 
-namespace Liddup
+using Plugin.MediaManager;
+using Plugin.MediaManager.Abstractions.Enums;
+using Plugin.MediaManager.Abstractions.EventArguments;
+using Plugin.MediaManager.Abstractions.Implementations;
+
+namespace Liddup.Pages
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MasterPlaylistPage : ContentPage
     {
         private ObservableCollection<Song> _songs = new ObservableCollection<Song>();
-        
-        public MasterPlaylistPage(string replicationIP)
+
+        public MasterPlaylistPage(string replicationIP, bool isHost = false)
         {
             InitializeComponent();
 
-            System.Diagnostics.Debug.WriteLine(replicationIP);
             SongManager.Host = replicationIP;
             RoomCodeLabel.Text = DependencyService.Get<INetworkManager>().GetEncryptedIPAddress(replicationIP);
             SongManager.StartListener();
 
             StartReplications();
 
+            if (!isHost)
+                _songs = SongManager.GetSongs();
             MasterPlaylist.ItemsSource = _songs;
 
-            SongManager.UpdateUI((sender, e) =>
+            CrossMediaManager.Current.MediaFileChanged += (sender, e) =>
+            {
+                var song = _songs.FirstOrDefault(s => s.Uri.Equals(e.File.Url));
+                song.AlbumArt = e.File.Metadata.AlbumArt;
+            };
+
+            SongManager.UpdateUI(async (sender, e) =>
             {
                 var changes = e.Changes;
 
                 foreach (var change in changes)
-                    _songs.Add(SongManager.GetSong(change.DocumentId));
+                {
+                    var song = SongManager.GetSong(change.DocumentId);
 
-                MasterPlaylist.ItemsSource = _songs;
+                    var indexOfExistingSong = _songs.IndexOf(_songs.FirstOrDefault(s => s.Id == song.Id));
+                    if (indexOfExistingSong < 0)
+                    {
+                        if (song.SongSource.Equals("Library"))
+                        {
+                            song.Contents = SongManager.GetSongContents(song);
+                            song.Uri = await FileSystemManager.WriteFileAsync(song.Contents, song.Id);
+                        }
+                        _songs.Add(song);
+                    }
+                    else
+                    {
+                        _songs[indexOfExistingSong].Votes = song.Votes;
+                        _songs = new ObservableCollection<Song>(_songs.OrderByDescending(s => s.Votes));
+                        MasterPlaylist.ItemsSource = _songs;
+                    }
+                }
             });
 
-            MessagingCenter.Subscribe<UserPlaylistSongsPage, Song>(this, "AddSong", (sender, song) =>
+            MessagingCenter.Subscribe<ISongProvider, Song>(this, "AddSong", SubscribeToSongAdditions);
+        }
+
+        private void SubscribeToSongAdditions(object sender, Song song)
+        {
+            if (_songs.FirstOrDefault(s => s.Uri.Equals(song.Uri)) == null)
             {
                 SongManager.SaveSong(song);
-                _songs = SongManager.GetSongs();
-            });
+                _songs.Add(song);
+            }
+            else
+            {
+                //TODO: Notify user that the song already exists via MessagingCenter
+            }
         }
 
         private async void AddSongsButton_OnClicked(object sender, EventArgs e)
         {
             await Navigation.PushAsync(new MusicServicesPage());
         }
-
-        private void StartSyncButton_OnClicked(object sender, EventArgs e)
+        private static void StartReplications()
         {
-            StartReplications();
-            DependencyService.Get<INetworkManager>().SetHotSpot(true);
+            SongManager.StartReplications((sender, e) => { });
         }
 
-        private void StartReplications()
-        {
-            SongManager.StartReplications((sender, e) =>
-            {
-                _songs = SongManager.GetSongs();
-                MasterPlaylist.ItemsSource = _songs;
-            });
-        }
-
-        //private static async void Browse()
-        //{
-        //    //await Task.Run(async () =>
-        //    //{
-
-        //    //});
-
-        //    var responses = await ZeroconfResolver.BrowseDomainsAsync();
-        //    var builder = new StringBuilder();
-        //    foreach (var service in responses)
-        //    {
-        //        builder.Append(service.Key + Environment.NewLine);
-
-        //        foreach (var host in service)
-        //            builder.Append("\tIP: " + host + Environment.NewLine);
-        //    }
-
-        //    System.Diagnostics.Debug.WriteLine(builder.ToString());
-        //}
-
-        //static async void Resolve(Label output)
-        //{
-        //    //await Task.Run(async () =>
-        //    //{
-
-        //    //});
-
-
-        //    var domains = await ZeroconfResolver.BrowseDomainsAsync();
-
-        //    var responses = await ZeroconfResolver.ResolveAsync(domains.Select(g => g.Key));
-
-
-        //    foreach (var resp in responses)
-        //    {
-        //        output.Text += resp + Environment.NewLine;
-        //    }
-        //}
         private void VoteButton_OnClicked(object sender, EventArgs e)
         {
             var button = sender as Button;
@@ -115,7 +100,36 @@ namespace Liddup
 
         private void DeleteButton_OnClicked(object sender, EventArgs e)
         {
-            SongManager.DeleteDatabase();
+            // This button is just for debugging, the database should get automatically deleted once the app closes or the user joins/hosts another playlist
+            SongManager.DeleteDatabases();
+        }
+
+        private void MasterPlaylist_OnItemSelected(object sender, SelectedItemChangedEventArgs e)
+        {
+            PlaySong(e.SelectedItem as Song);
+        }
+
+        private static async void PlaySong(Song song)
+        {
+            switch (song.SongSource)
+            {
+                case "Spotify":
+                    DependencyService.Get<ISpotifyApi>().PlayTrack(song.Uri);
+                    break;
+                case "Library":
+                    var mediaFile = new MediaFile
+                    {
+                        Url = "file://" + song.Uri,
+                        Metadata = new MediaFileMetadata {AlbumArt = song.AlbumArt},
+                        Type = MediaFileType.Audio,
+                        Availability = ResourceAvailability.Local
+                    };
+                    await CrossMediaManager.Current.Play(mediaFile);
+                    
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }
