@@ -7,5 +7,6 @@ namespace Liddup.Services
     public interface IFileSystem
     {
         string GetMusicDirectory();
+        void DeleteDirectoryContents(string path);
     }
 }

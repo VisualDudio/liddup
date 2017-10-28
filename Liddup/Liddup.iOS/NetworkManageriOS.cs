@@ -53,6 +53,7 @@ namespace Liddup.iOS
         public void SetHotSpot(bool on)
         {
             var hotspotNetwork = new NEHotspotNetwork();
+ 
             hotspotNetwork.SetPassword("password");
             hotspotNetwork.Init();
             System.Diagnostics.Debug.WriteLine(hotspotNetwork.Ssid);

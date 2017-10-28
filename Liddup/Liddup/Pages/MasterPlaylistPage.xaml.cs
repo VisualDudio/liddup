@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using Liddup.Models;
 using Liddup.Services;
 using Xamarin.Forms;
@@ -16,7 +17,7 @@ namespace Liddup.Pages
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MasterPlaylistPage : ContentPage
     {
-        private ObservableCollection<Song> _songs = new ObservableCollection<Song>();
+        private static ObservableCollection<Song> _songs = new ObservableCollection<Song>();
 
         public MasterPlaylistPage(string replicationIP, bool isHost = false)
         {
@@ -30,15 +31,32 @@ namespace Liddup.Pages
 
             if (!isHost)
                 _songs = SongManager.GetSongs();
+
             MasterPlaylist.ItemsSource = _songs;
 
-            CrossMediaManager.Current.MediaFileChanged += (sender, e) =>
-            {
-                var song = _songs.FirstOrDefault(s => s.Uri.Equals(e.File.Url));
-                song.AlbumArt = e.File.Metadata.AlbumArt;
-            };
+            MessagingCenter.Subscribe<ISongProvider, Song>(this, "AddSong", SubscribeToSongAdditions);
+        }
 
-            SongManager.UpdateUI(async (sender, e) =>
+        private static void SubscribeToSongAdditions(object sender, Song song)
+        {
+            if (_songs.FirstOrDefault(s => s.Uri.Equals(song.Uri)) == null)
+            {
+                SongManager.SaveSong(song);
+                _songs.Add(song);
+            }
+            else
+            {
+                //TODO: Notify user that the song already exists via MessagingCenter
+            }
+        }
+
+        private async void AddSongsButton_OnClicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new MusicServicesPage());
+        }
+        private void StartReplications()
+        {
+            SongManager.StartReplications(async (sender, e) =>
             {
                 var changes = e.Changes;
 
@@ -64,30 +82,6 @@ namespace Liddup.Pages
                     }
                 }
             });
-
-            MessagingCenter.Subscribe<ISongProvider, Song>(this, "AddSong", SubscribeToSongAdditions);
-        }
-
-        private void SubscribeToSongAdditions(object sender, Song song)
-        {
-            if (_songs.FirstOrDefault(s => s.Uri.Equals(song.Uri)) == null)
-            {
-                SongManager.SaveSong(song);
-                _songs.Add(song);
-            }
-            else
-            {
-                //TODO: Notify user that the song already exists via MessagingCenter
-            }
-        }
-
-        private async void AddSongsButton_OnClicked(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new MusicServicesPage());
-        }
-        private static void StartReplications()
-        {
-            SongManager.StartReplications((sender, e) => { });
         }
 
         private void VoteButton_OnClicked(object sender, EventArgs e)

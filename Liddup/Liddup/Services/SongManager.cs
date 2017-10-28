@@ -10,7 +10,6 @@ namespace Liddup.Services
 {
     public static class SongManager
     {
-        public delegate void ReloadDataDelegate(object sender, ReplicationChangeEventArgs e);
         public delegate void DatabaseChangedDelegate(object sender, DatabaseChangeEventArgs e);
 
         private static readonly Database _database;
@@ -18,7 +17,7 @@ namespace Liddup.Services
         private const ushort Port = 5431;
         private const string Scheme = "http";
         public static string Host;
-        private const string DatabaseName = "liddupsongs05";
+        private const string DatabaseName = "liddupsongs003";
 
         static SongManager()
         {
@@ -98,14 +97,16 @@ namespace Liddup.Services
                 {
                     doc.Update(newRevision =>
                     {
-                        var props = newRevision.Properties;
+                        var props = newRevision.UserProperties;
                         props["votes"] = song.Votes;
-                        song.Id = newRevision.Id;
+                        song.Id = newRevision.Document.Id;
+                        newRevision.SetUserProperties(props);
                         return true;
                     });
                 }
                 catch (Exception ex)
                 {
+                    System.Diagnostics.Debug.WriteLine(ex);
                 }
             }
             return doc.Id;
@@ -122,15 +123,7 @@ namespace Liddup.Services
             DependencyService.Get<INetworkManager>().Start(_manager, Port);
         }
 
-        public static void UpdateUI(DatabaseChangedDelegate updater)
-        {
-            _database.Changed += (sender, e) =>
-            {
-                updater?.Invoke(sender, e);
-            };
-        }
-
-        public static void StartReplications(ReloadDataDelegate refresher)
+        public static void StartReplications(DatabaseChangedDelegate refresher)
         {
             var pull = _database.CreatePullReplication(CreateSyncUri());
             var push = _database.CreatePushReplication(CreateSyncUri());
@@ -138,18 +131,13 @@ namespace Liddup.Services
             pull.Continuous = true;
             push.Continuous = true;
 
+            _database.Changed += (sender, e) =>
+            {
+                refresher?.Invoke(sender, e);
+            };
+
             pull.Start();
             push.Start();
-
-            pull.Changed += (sender, e) =>
-            {
-                refresher?.Invoke(sender, e);
-            };
-
-            push.Changed += (sender, e) =>
-            {
-                refresher?.Invoke(sender, e);
-            };
         }
 
         private static Uri CreateSyncUri()
