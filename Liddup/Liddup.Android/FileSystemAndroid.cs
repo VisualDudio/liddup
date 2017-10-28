@@ -1,4 +1,5 @@
-﻿using Liddup.Droid;
+﻿using System.IO;
+using Liddup.Droid;
 using Liddup.Services;
 using Xamarin.Forms;
 using Environment = Android.OS.Environment;
@@ -13,6 +14,15 @@ namespace Liddup.Droid
         {
             return Environment.GetExternalStoragePublicDirectory(Environment.DirectoryMusic).AbsolutePath;
             //return Environment.GetExternalStoragePublicDirectory(Environment.DirectoryDownloads).AbsolutePath;
+        }
+
+        public void DeleteDirectoryContents(string path)
+        {
+            var files = Directory.GetFiles(path, "*");
+
+            if (files.Length <= 0) return;
+            foreach (var file in files)
+                File.Delete(file);
         }
     }
 }

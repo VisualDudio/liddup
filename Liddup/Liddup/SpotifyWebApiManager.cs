@@ -92,7 +92,6 @@ namespace Liddup
                 Title = ((FullTrack)item).Name,
                 Votes = 0
             };
-            var track = new FullTrack();
 
             try
             {

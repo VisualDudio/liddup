@@ -37,7 +37,7 @@ namespace Liddup.Pages
 
         private void ConnectGooglePlayMusicButton_OnClicked(object sender, EventArgs e)
         {
-            
+           
         }
     }
 }
