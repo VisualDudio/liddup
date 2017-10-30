@@ -1,25 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using AVFoundation;
 using Foundation;
-using UIKit;
-
-using SpotifyBindingiOS;
-using Liddup.iOS;
+using Liddup.Constants;
+using Liddup.iOS.Services;
 using Liddup.Services;
+using SpotifyBindingiOS;
+using UIKit;
 using Xamarin.Forms;
 
-using ObjCRuntime;
-
 [assembly: Dependency(typeof(SpotifyApiiOS))]
-namespace Liddup.iOS
+namespace Liddup.iOS.Services
 {
-    class SpotifyApiiOS : SPTAudioStreamingDelegate, ISpotifyApi
+    internal class SpotifyApiiOS : SPTAudioStreamingDelegate, ISpotifyApi
     {
-        SPTAuth auth = SPTAuth.DefaultInstance;
-        private readonly string _clientId = ApiConstants.SpotifyClientId;
+        private SPTAuth _auth = SPTAuth.DefaultInstance;
+        private const string ClientId = ApiConstants.SpotifyClientId;
         private readonly NSUrl _redirectUrl = new NSUrl(ApiConstants.SpotifyRedirectUri);
         private NSUrl _tokenSwapUrl;
         private NSUrl _tokenRefreshUrl;
@@ -36,7 +31,7 @@ namespace Liddup.iOS
         private static NSString[] ConvertStringsToNsStrings(IReadOnlyList<string> strings)
         {
             var result = new NSString[strings.Count];
-            for (int i = 0; i < strings.Count; i++)
+            for (var i = 0; i < strings.Count; i++)
                 result[i] = new NSString(strings[i]);
 
             return result;
@@ -51,7 +46,7 @@ namespace Liddup.iOS
         {
             if (SPTAuth.SupportsApplicationAuthentication)
             {
-                var url = auth.LoginURL;
+                var url = _auth.LoginURL;
                 UIApplication.SharedApplication.OpenUrl(url);
             }
             else
@@ -59,14 +54,12 @@ namespace Liddup.iOS
                 
             }
 
-            if (auth.Session != null)
+            if (_auth.Session == null) return;
+            var auth = SPTAuth.DefaultInstance;
+            auth.RenewSession(auth.Session, (error, session) =>
             {
-                var auth = SPTAuth.DefaultInstance;
-                auth.RenewSession(auth.Session, (error, session) =>
-                {
-                    auth.Session = session;
-                });
-            }
+                auth.Session = session;
+            });
         }
 
         public void InitializeSpotify()
@@ -80,7 +73,7 @@ namespace Liddup.iOS
             };
 
             _spotifyPlayer = SPTAudioStreamingController.SharedInstance();
-            SPTAuth.DefaultInstance.ClientID = _clientId;
+            SPTAuth.DefaultInstance.ClientID = ClientId;
             SPTAuth.DefaultInstance.RequestedScopes = scopes;
             SPTAuth.DefaultInstance.RedirectURL = _redirectUrl;
             SPTAuth.DefaultInstance.TokenSwapURL = _tokenSwapUrl;
@@ -93,7 +86,7 @@ namespace Liddup.iOS
 
             try
             {
-                SPTAudioStreamingController.SharedInstance().StartWithClientId(_clientId, out error);
+                SPTAudioStreamingController.SharedInstance().StartWithClientId(ClientId, out error);
             }
             catch
             {
@@ -104,7 +97,7 @@ namespace Liddup.iOS
             StartAuthenticationFlow();
         }
 
-        public void StartAuthenticationFlow()
+        private void StartAuthenticationFlow()
         {
             if (SPTAuth.DefaultInstance.Session.IsValid)
                 StartLoginFlow();
@@ -116,7 +109,7 @@ namespace Liddup.iOS
             }
         }
 
-        public void StartLoginFlow()
+        private static void StartLoginFlow()
         {
             
         }
@@ -138,9 +131,9 @@ namespace Liddup.iOS
 
         public void RenewTokenAndShowPlayer()
         {
-            auth = SPTAuth.DefaultInstance;
+            _auth = SPTAuth.DefaultInstance;
 
-            auth.RenewSession(auth.Session, (error, session) =>
+            _auth.RenewSession(_auth.Session, (error, session) =>
             {
                 
             });

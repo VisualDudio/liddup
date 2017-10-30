@@ -19,25 +19,25 @@ namespace Liddup.Pages
     {
         private static ObservableCollection<Song> _songs = new ObservableCollection<Song>();
 
-        public MasterPlaylistPage(string replicationIP, bool isHost = false)
+        public MasterPlaylistPage(string replicationIp, bool isHost = false)
         {
             InitializeComponent();
 
-            SongManager.Host = replicationIP;
-            RoomCodeLabel.Text = DependencyService.Get<INetworkManager>().GetEncryptedIPAddress(replicationIP);
+            SongManager.Host = replicationIp;
+            RoomCodeLabel.Text = DependencyService.Get<INetworkManager>().GetEncryptedIPAddress(replicationIp);
             SongManager.StartListener();
 
             StartReplications();
 
             if (!isHost)
-                _songs = SongManager.GetSongs();
+                _songs = new ObservableCollection<Song>(SongManager.GetSongs().OrderByDescending(s => s.Votes));
 
             MasterPlaylist.ItemsSource = _songs;
 
-            MessagingCenter.Subscribe<ISongProvider, Song>(this, "AddSong", SubscribeToSongAdditions);
+            MessagingCenter.Subscribe<ISongProvider, Song>(this, "AddSong", AddSong);
         }
 
-        private static void SubscribeToSongAdditions(object sender, Song song)
+        private static void AddSong(object sender, Song song)
         {
             if (_songs.FirstOrDefault(s => s.Uri.Equals(song.Uri)) == null)
             {
@@ -58,7 +58,7 @@ namespace Liddup.Pages
         {
             SongManager.StartReplications(async (sender, e) =>
             {
-                var changes = e.Changes;
+                var changes = e.Changes.ToList();
 
                 foreach (var change in changes)
                 {
@@ -67,7 +67,7 @@ namespace Liddup.Pages
                     var indexOfExistingSong = _songs.IndexOf(_songs.FirstOrDefault(s => s.Id == song.Id));
                     if (indexOfExistingSong < 0)
                     {
-                        if (song.SongSource.Equals("Library"))
+                        if (song.Source.Equals("Library"))
                         {
                             song.Contents = SongManager.GetSongContents(song);
                             song.Uri = await FileSystemManager.WriteFileAsync(song.Contents, song.Id);
@@ -105,10 +105,10 @@ namespace Liddup.Pages
 
         private static async void PlaySong(Song song)
         {
-            switch (song.SongSource)
+            switch (song.Source)
             {
                 case "Spotify":
-                    DependencyService.Get<ISpotifyApi>().PlayTrack(song.Uri);
+                    SpotifyApiManager.PlayTrack(song.Uri);
                     break;
                 case "Library":
                     var mediaFile = new MediaFile

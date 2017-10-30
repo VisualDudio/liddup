@@ -1,12 +1,12 @@
 ﻿using System.IO;
-using Liddup.Droid;
+using Liddup.Droid.Services;
 using Liddup.Services;
 using Xamarin.Forms;
 using Environment = Android.OS.Environment;
 
 [assembly: Dependency(typeof(FileSystemAndroid))]
 
-namespace Liddup.Droid
+namespace Liddup.Droid.Services
 {
     public class FileSystemAndroid : IFileSystem
     {

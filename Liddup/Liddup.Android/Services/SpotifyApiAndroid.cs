@@ -1,24 +1,22 @@
 ﻿using Android.App;
 using Android.Content;
 using Android.Net;
-using Liddup.Droid;
-
 using Com.Spotify.Sdk.Android.Authentication;
 using Com.Spotify.Sdk.Android.Player;
 using Liddup.Droid.Delegates;
+using Liddup.Droid.Services;
 using Liddup.Services;
 using Xamarin.Forms;
 using Error = Com.Spotify.Sdk.Android.Player.Error;
 
 [assembly: Dependency(typeof(SpotifyApiAndroid))]
-//TODO: Implement OnResume() and other MainActivity-invoked events
-namespace Liddup.Droid
+namespace Liddup.Droid.Services
 {
-    class SpotifyApiAndroid : Java.Lang.Object, ISpotifyApi, IPlayerNotificationCallback, IConnectionStateCallback
+    internal class SpotifyApiAndroid : Java.Lang.Object, ISpotifyApi, IPlayerNotificationCallback, IConnectionStateCallback
     {
-        public const string ClientId = "969187cf9a3c48879a4c8e7376435aa3";
-        public const string RedirectUri = "testschema://callback";
-        public int RequestCode = 1337;
+        private const string ClientId = "969187cf9a3c48879a4c8e7376435aa3";
+        private const string RedirectUri = "testschema://callback";
+        private const int RequestCode = 1337;
         private PlaybackState _currentPlaybackState;
         private SpotifyPlayer _spotifyPlayer;
         private Metadata _metadata;

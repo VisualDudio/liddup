@@ -3,43 +3,17 @@ using System.Net;
 using System.Text;
 using Android.Content;
 using Android.Net.Wifi;
-using Couchbase.Lite;
-using Couchbase.Lite.Listener;
-using Couchbase.Lite.Listener.Bonjour;
-using Couchbase.Lite.Listener.Tcp;
-using Liddup.Droid;
+using Liddup.Droid.Services;
 using Liddup.Services;
-using Mono.Zeroconf.Providers.Bonjour;
 using Xamarin.Forms;
 using Array = System.Array;
 
 [assembly: Dependency(typeof(NetworkManagerAndroid))]
-namespace Liddup.Droid
+namespace Liddup.Droid.Services
 {
     public class NetworkManagerAndroid : INetworkManager
     {
         public NetworkManagerAndroid() { }
-
-        public void Start(Manager manager, ushort port)
-        {
-            var listener = new CouchbaseLiteTcpListener(manager, port, CouchbaseLiteTcpOptions.Default);
-            //var broadcaster = new CouchbaseLiteServiceBroadcaster(null, port)
-            //{
-            //    Name = "LiddupSession"
-            //};
-            //broadcaster.Start();
-            listener.Start();
-
-            //var browser = new CouchbaseLiteServiceBrowser(null);
-            //browser.ServiceResolved += (sender, e) => {
-                
-            //};
-
-            //browser.ServiceRemoved += (sender, e) => {
-                
-            //};
-            //browser.Start();
-        }
 
         public string GetIPAddress()
         {

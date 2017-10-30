@@ -36,7 +36,7 @@ namespace Liddup.Pages
                     IsBusy = true;
                     await Task.Delay(TimeSpan.FromSeconds(1), _tokenSource.Token);
 
-                    UserPlaylists.ItemsSource = await SpotifyWebApiManager.GetUserPlaylistsAsync(_tokenSource.Token);
+                    UserPlaylists.ItemsSource = await SpotifyApiManager.GetUserPlaylistsAsync(_tokenSource.Token);
                 }
                 catch (TaskCanceledException)
                 {

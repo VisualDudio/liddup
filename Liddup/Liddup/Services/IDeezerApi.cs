@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Liddup.Services
 {
-    interface IDeezerApi
+    internal interface IDeezerApi
     {
     }
 }

@@ -54,7 +54,7 @@ namespace Liddup.Pages
 	        {
                 Title = file?.Name,
                 Uri = filePath,
-                SongSource = "Library",
+                Source = "Library",
                 Votes = 0,
                 Contents = contents
             };

@@ -27,6 +27,7 @@ namespace Liddup.Droid
 		public static void UpdateIdValues()
 		{
 			global::Couchbase.Lite.Android.Resource.String.library_name = global::Liddup.Droid.Resource.String.library_name;
+			global::Couchbase.Lite.Listener.Bonjour.Android.Resource.String.library_name = global::Liddup.Droid.Resource.String.library_name;
 			global::Couchbase.Lite.Listener.Android.Resource.String.library_name = global::Liddup.Droid.Resource.String.library_name;
 			global::PCLStorage.Resource.String.ApplicationName = global::Liddup.Droid.Resource.String.ApplicationName;
 			global::PCLStorage.Resource.String.Hello = global::Liddup.Droid.Resource.String.Hello;

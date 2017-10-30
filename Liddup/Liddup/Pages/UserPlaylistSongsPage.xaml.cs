@@ -30,7 +30,7 @@ namespace Liddup.Pages
                     IsBusy = true;
                     await Task.Delay(TimeSpan.FromSeconds(1), _tokenSource.Token);
 
-                    UserPlaylistSongs.ItemsSource = await SpotifyWebApiManager.GetUserPlaylistSongsAsync(profileId, playlistId, _tokenSource.Token);
+                    UserPlaylistSongs.ItemsSource = await SpotifyApiManager.GetUserPlaylistSongsAsync(profileId, playlistId, _tokenSource.Token);
                 }
                 catch (TaskCanceledException)
                 {
@@ -44,7 +44,7 @@ namespace Liddup.Pages
 
         private void UserPlaylistSongs_OnItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
-            SpotifyWebApiManager.AddSongToMasterPlaylist(e.SelectedItem, this);
+            SpotifyApiManager.AddSongToMasterPlaylist(e.SelectedItem, this);
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using PCLStorage;
 
-namespace Liddup
+namespace Liddup.Services
 {
     public static class FileSystemManager
     {

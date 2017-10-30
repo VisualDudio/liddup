@@ -89,13 +89,13 @@
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="DeezerApiiOS.cs" />
-    <Compile Include="FileSystemiOS.cs" />
-    <Compile Include="NapsterApiiOS.cs" />
-    <Compile Include="NetworkManageriOS.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
-    <Compile Include="SpotifyApiiOS.cs" />
+    <Compile Include="Services\DeezerApiiOS.cs" />
+    <Compile Include="Services\FileSystemiOS.cs" />
+    <Compile Include="Services\NapsterApiiOS.cs" />
+    <Compile Include="Services\NetworkManageriOS.cs" />
+    <Compile Include="Services\SpotifyApiiOS.cs" />
     <None Include="app.config" />
     <None Include="Entitlements.plist" />
     <None Include="Info.plist" />
@@ -156,6 +156,9 @@
     </Reference>
     <Reference Include="SpotifyBindingiOS">
       <HintPath>..\..\..\..\..\Documents\Visual Studio 2017\Projects\SpotifyBindingiOS\SpotifyBindingiOS\bin\Debug\SpotifyBindingiOS.dll</HintPath>
+    </Reference>
+    <Reference Include="SpotifyBindingiOS, Version=1.0.6498.3377, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\..\Documents\Visual Studio 2017\Projects\SpotifyBindingiOS\SpotifyBindingiOS\bin\Debug\SpotifyBindingiOS.dll</HintPath>
     </Reference>
     <Reference Include="SQLitePCL.raw, Version=0.9.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\SQLitePCL.raw.0.9.3\lib\Xamarin.iOS10\SQLitePCL.raw.dll</HintPath>

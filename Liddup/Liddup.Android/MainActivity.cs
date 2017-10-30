@@ -6,6 +6,7 @@ using Android.Content.PM;
 using Android.Net.Wifi;
 using Android.OS;
 using Liddup.Droid.Delegates;
+using Liddup.Droid.Services;
 using Xamarin.Forms;
 using Liddup.Pages;
 

@@ -1,22 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.NetworkInformation;
+﻿using System.Net.NetworkInformation;
 using System.Net.Sockets;
-using System.Text;
 using Couchbase.Lite;
 using Couchbase.Lite.Listener.Tcp;
-using NetworkExtension;
-using Foundation;
-using Liddup.iOS;
+using Liddup.iOS.Services;
 using Liddup.Services;
-using UIKit;
+using NetworkExtension;
 using Xamarin.Forms;
 
 [assembly: Dependency(typeof(NetworkManageriOS))]
-namespace Liddup.iOS
+namespace Liddup.iOS.Services
 {
-    class NetworkManageriOS : INetworkManager
+    internal class NetworkManageriOS : INetworkManager
     {
         public void Start(Manager manager, ushort port)
         {
@@ -36,7 +30,7 @@ namespace Liddup.iOS
                     if (addrInfo.Address.AddressFamily == AddressFamily.InterNetwork)
                         ipAddress = addrInfo.Address.ToString();
             }
-
+            
             return ipAddress;
         }
 
@@ -53,7 +47,7 @@ namespace Liddup.iOS
         public void SetHotSpot(bool on)
         {
             var hotspotNetwork = new NEHotspotNetwork();
- 
+            
             hotspotNetwork.SetPassword("password");
             hotspotNetwork.Init();
             System.Diagnostics.Debug.WriteLine(hotspotNetwork.Ssid);

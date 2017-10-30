@@ -18,7 +18,7 @@ namespace Liddup.Models
         public string Id { get; set; }
         public string Title { get; set; }
         public string Uri { get; set; }
-        public string SongSource { get; set; }
+        public string Source { get; set; }
         public object AlbumArt { get; set; }
         public byte[] Contents { get; set; }
 
@@ -54,7 +54,7 @@ namespace Liddup.Models
             {
                 {"title", Title },
                 {"uri", Uri },
-                {"songsource", SongSource },
+                {"source", Source },
                 {"votes", _votes },
                 {"isPlaying", _isPlaying }
             };

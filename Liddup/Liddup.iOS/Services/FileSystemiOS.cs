@@ -1,19 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Foundation;
-using Liddup.iOS;
+﻿using Liddup.iOS.Services;
 using Liddup.Services;
-using UIKit;
-using Xamarin.Forms;
-
 using MediaPlayer;
+using Xamarin.Forms;
 
 [assembly: Dependency(typeof(FileSystemiOS))]
 
-namespace Liddup.iOS
+namespace Liddup.iOS.Services
 {
     class FileSystemiOS : IFileSystem
     {
@@ -23,6 +15,11 @@ namespace Liddup.iOS
             var result = query.Items;
             
             return "";
+        }
+
+        public void DeleteDirectoryContents(string path)
+        {
+            
         }
     }
 }

@@ -1,12 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageTargetFallback>$(PackageTargetFallback);portable-win+net45+wp8+win81+wpa8</PackageTargetFallback>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Couchbase.Lite-PCL" Version="1.4.0" />
+    <PackageReference Include="Couchbase.Lite.Listener" Version="1.4.0" />
+    <PackageReference Include="Couchbase.Lite.Listener.Bonjour" Version="1.4.0" />
     <PackageReference Include="Google.Music.Api" Version="1.0.0.20" />
     <PackageReference Include="Microsoft.NETCore.Portable.Compatibility" Version="1.0.2" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
@@ -17,11 +17,9 @@
     <PackageReference Include="Xamarin.Forms" Version="2.5.0.19271-pre2" />
     <PackageReference Include="Zeroconf" Version="2.9.0" />
   </ItemGroup>
-
   <ItemGroup>
     <Reference Include="Plugin.MediaManager">
       <HintPath>..\..\..\..\..\.nuget\packages\plugin.mediamanager\0.4.5\lib\uap10.0\Plugin.MediaManager.dll</HintPath>
     </Reference>
   </ItemGroup>
-
 </Project>
