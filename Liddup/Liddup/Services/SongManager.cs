@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+
 using Couchbase.Lite;
-using Couchbase.Lite.Listener;
 using Couchbase.Lite.Listener.Tcp;
 
 using Liddup.Models;
-using Xamarin.Forms;
 
 namespace Liddup.Services
 {
@@ -19,7 +18,7 @@ namespace Liddup.Services
         private const ushort Port = 5431;
         private const string Scheme = "http";
         public static string Host;
-        private const string DatabaseName = "liddupsongs004";
+        private const string DatabaseName = "liddupsongs0005";
 
         static SongManager()
         {
@@ -42,38 +41,9 @@ namespace Liddup.Services
             return song;
         }
 
-        private static void ResolveConflicts(string id)
-        {
-            var conflicts = Database.GetDocument(id).ConflictingRevisions.ToList();
-            if (conflicts.Count > 1)
-            {
-                Database.RunInTransaction(() =>
-                {
-                    var mergedProperties = MergeRevisions(conflicts);
-                    var current = Database.GetDocument(id).CurrentRevision;
-                    foreach(var rev in conflicts)
-                    {
-                        var newRev = rev.CreateRevision();
-                        if (rev.Equals(current))
-                            newRev.SetProperties(mergedProperties);
-                        else
-                            newRev.IsDeletion = true;
-                        
-                        newRev.Save();
-                    }
-                    return true;
-                });
-            }
-        }
-
-        private static Dictionary<string, object> MergeRevisions(List<SavedRevision> conflicts)
-        {
-            return null;
-        }
-        
         public static byte[] GetSongContents(Song song)
         {
-            return Database.GetDocument(song.Id).CurrentRevision.GetAttachment("contents").Content.ToArray();
+            return Database.GetDocument(song.Id).CurrentRevision.GetAttachment("contents")?.Content.ToArray();
         }
 
         public static IEnumerable<Song> GetSongs()
@@ -115,9 +85,13 @@ namespace Liddup.Services
             {
                 doc = Database.CreateDocument();
                 doc.PutProperties(song.ToDictionary());
-                var newRevision = doc.CurrentRevision.CreateRevision();
-                newRevision.SetAttachment("contents", "audio/mpeg", song.Contents);
-                newRevision.Save();
+                
+                if (song.Source.Equals("Library"))
+                {
+                    var newRevision = doc.CurrentRevision.CreateRevision();
+                    newRevision.SetAttachment("contents", "audio/mpeg", song.Contents);
+                    newRevision.Save();
+                }
             }
             else
             {
@@ -126,9 +100,10 @@ namespace Liddup.Services
                 {
                     doc.Update(newRevision =>
                     {
-                        var properties = newRevision.Properties;
+                        var properties = newRevision.UserProperties;
+                        if (song.Source.Equals("Library"))
+                            newRevision.SetAttachment("contents", "audio/mpeg", song.Contents);
                         properties["votes"] = song.Votes;
-                        //song.Id = newRevision.Document.Id;
                         newRevision.SetUserProperties(properties);
                         return true;
                     });

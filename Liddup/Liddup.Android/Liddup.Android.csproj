@@ -98,19 +98,11 @@
     <Reference Include="SpotifyAPI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\SpotifyAPI-NET.2.16.0\lib\SpotifyAPI.dll</HintPath>
     </Reference>
-    <Reference Include="SpotifyAuthenticationBinding, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="SpotifyAuthenticationBinding">
       <HintPath>..\..\..\..\..\Documents\Visual Studio 2017\Projects\SpotifyAuthenticationBinding\SpotifyAuthenticationBinding\bin\Debug\SpotifyAuthenticationBinding.dll</HintPath>
     </Reference>
-    <Reference Include="SpotifyAuthenticationBinding, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\..\..\Documents\Visual Studio 2017\Projects\SpotifyAuthenticationBinding\SpotifyAuthenticationBinding\bin\Debug\SpotifyAuthenticationBinding.dll</HintPath>
-    </Reference>
-    <Reference Include="SpotifyBinding, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="SpotifyBinding">
       <HintPath>..\..\..\..\..\Documents\Visual Studio 2017\Projects\SpotifyBinding\SpotifyBinding\bin\Debug\SpotifyBinding.dll</HintPath>
-    </Reference>
-    <Reference Include="SpotifyBinding, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\..\..\Documents\Visual Studio 2017\Projects\SpotifyBinding\SpotifyBinding\bin\Debug\SpotifyBinding.dll</HintPath>
     </Reference>
     <Reference Include="SQLitePCL.raw, Version=0.9.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\SQLitePCL.raw.0.9.3\lib\MonoAndroid\SQLitePCL.raw.dll</HintPath>

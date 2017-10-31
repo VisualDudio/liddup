@@ -7,6 +7,7 @@ using Liddup.Models;
 using SpotifyAPI.Web;
 using SpotifyAPI.Web.Models;
 using Xamarin.Forms;
+using SpotifyAPI.Web.Enums;
 
 namespace Liddup.Services
 {
@@ -77,7 +78,7 @@ namespace Liddup.Services
                 token.ThrowIfCancellationRequested();
                 list.AddRange(savedTracks.Items.Select(track => track.Track));
             }
-
+            
             return list;
         }
 

@@ -6,6 +6,8 @@ using Liddup.iOS.Services;
 using Liddup.Services;
 using NetworkExtension;
 using Xamarin.Forms;
+using System.Text;
+using System;
 
 [assembly: Dependency(typeof(NetworkManageriOS))]
 namespace Liddup.iOS.Services
@@ -36,12 +38,35 @@ namespace Liddup.iOS.Services
 
         public string GetEncryptedIPAddress(string ip)
         {
-            return null;
+            var ipComponents = ip.Split('.');
+            var builder = new StringBuilder();
+            var shift = new Random().Next(0, 100);
+
+            foreach (var component in ipComponents)
+            {
+                //var convertedComponent = GetBaseConversion(int.Parse(component),
+                //    Enumerable.Range('A', 26).Select(x => (char)x).ToArray());
+                var convertedComponent = Convert.ToInt32(component).ToString("X");
+                if (convertedComponent.Length == 1)
+                    convertedComponent = "0" + convertedComponent;
+                builder.Append(convertedComponent);
+            }
+
+            return builder.ToString();
         }
 
         public string GetDecryptedIPAddress(string ip)
         {
-            return null;
+            var builder = new StringBuilder();
+
+            for (var i = 0; i < ip.Length; i += 2)
+            {
+                var ipComponent = Convert.ToInt32(ip.Substring(i, 2), 16);
+                //var ipComponent = GetBaseConversion(int.Parse(ip.Substring(i, 2)),
+                //    new[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' });
+                builder.Append(ipComponent + ".");
+            }
+            return builder.Remove(builder.ToString().LastIndexOf('.'), 1).ToString();
         }
 
         public void SetHotSpot(bool on)
