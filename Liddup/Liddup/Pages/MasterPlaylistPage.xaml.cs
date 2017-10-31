@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading.Tasks;
 using Liddup.Models;
 using Liddup.Services;
 using Xamarin.Forms;
@@ -9,7 +8,6 @@ using Xamarin.Forms.Xaml;
 
 using Plugin.MediaManager;
 using Plugin.MediaManager.Abstractions.Enums;
-using Plugin.MediaManager.Abstractions.EventArguments;
 using Plugin.MediaManager.Abstractions.Implementations;
 
 namespace Liddup.Pages
