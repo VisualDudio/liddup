@@ -17,7 +17,7 @@ namespace Liddup.Droid
 
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
-        public event EventHandler<ActivityResultEventArgs> ActivityResult = delegate { };
+        public event EventHandler<ActivityResultEventArgs> ActivityResultDelegate = delegate { };
         public event EventHandler<DestroyEventArgs> Destroy = delegate { };
 
         protected override void OnCreate(Bundle bundle)
@@ -37,7 +37,7 @@ namespace Liddup.Droid
         protected override void OnActivityResult(int requestCode, Result resultCode, Intent intent)
         {
             base.OnActivityResult(requestCode, resultCode, intent);
-            ActivityResult(this, new ActivityResultEventArgs
+            ActivityResultDelegate(this, new ActivityResultEventArgs
             {
                 RequestCode = requestCode,
                 ResultCode = resultCode,

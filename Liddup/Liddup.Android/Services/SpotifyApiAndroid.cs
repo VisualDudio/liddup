@@ -6,6 +6,7 @@ using Com.Spotify.Sdk.Android.Player;
 using Liddup.Droid.Delegates;
 using Liddup.Droid.Services;
 using Liddup.Services;
+using Liddup.Constants;
 using Xamarin.Forms;
 using Error = Com.Spotify.Sdk.Android.Player.Error;
 
@@ -14,9 +15,6 @@ namespace Liddup.Droid.Services
 {
     internal class SpotifyApiAndroid : Java.Lang.Object, ISpotifyApi, IPlayerNotificationCallback, IConnectionStateCallback
     {
-        private const string ClientId = "969187cf9a3c48879a4c8e7376435aa3";
-        private const string RedirectUri = "testschema://callback";
-        private const int RequestCode = 1337;
         private PlaybackState _currentPlaybackState;
         private SpotifyPlayer _spotifyPlayer;
         private Metadata _metadata;
@@ -39,41 +37,41 @@ namespace Liddup.Droid.Services
         public void Login()
         {
             string[] scopes = { "user-library-read", "user-read-private", "playlist-read", "playlist-read-private", "playlist-read-collaborative", "streaming" };
-            var request = new AuthenticationRequest.Builder(ClientId, AuthenticationResponse.Type.Token, RedirectUri).SetScopes(scopes).Build();
+            var request = new AuthenticationRequest.Builder(ApiConstants.SpotifyClientId, AuthenticationResponse.Type.Token, ApiConstants.SpotifyRedirectUri).SetScopes(scopes).Build();
 
             var activity = (Activity)Forms.Context as MainActivity;
 
-            if (activity != null) activity.ActivityResult += HandleActivityResult;
+            if (activity != null) activity.ActivityResultDelegate += HandleActivityResultDelegate;
 
-            AuthenticationClient.OpenLoginActivity(activity, RequestCode, request);
+            AuthenticationClient.OpenLoginActivity(activity, ApiConstants.SpotifyRequestCode, request);
         }
 
-        public void InitPlayer(AuthenticationResponse response)
+        private void InitPlayer(string accessToken)
         {
             if (_spotifyPlayer == null)
             {
-                AccessToken = response.AccessToken;
+                AccessToken = accessToken;
 
-                var playerConfig = new Config(Forms.Context, response.AccessToken, ClientId);
+                var playerConfig = new Config(Forms.Context, accessToken, ApiConstants.SpotifyClientId);
 
                 _spotifyPlayer = Spotify.GetPlayer(playerConfig, this, new InitializationObserverDelegate(p =>
                 {
                     p.SetConnectivityStatus(_operationCallbackDelegate, GetNetworkConnectivity(Forms.Context));
                     p.AddNotificationCallback(this);
                     p.AddConnectionStateCallback(this);
-                    p.Login(response.AccessToken);
+                    p.Login(accessToken);
                 }, throwable => LogStatus(throwable.ToString())));
             }
             else
-                _spotifyPlayer.Login(response.AccessToken);
+                _spotifyPlayer.Login(accessToken);
         }
 
-        private void HandleActivityResult(object sender, ActivityResultEventArgs e)
+        private void HandleActivityResultDelegate(object sender, ActivityResultEventArgs e)
         {
-            if (e.RequestCode != RequestCode) return;
+            if (e.RequestCode != ApiConstants.SpotifyRequestCode) return;
             var response = AuthenticationClient.GetResponse((int)e.ResultCode, e.Data);
             if (response?.ResponseType == AuthenticationResponse.Type.Token)
-                InitPlayer(response);
+                InitPlayer(response?.AccessToken);
         }
 
         public void OnConnectionMessage(string message)
@@ -101,7 +99,7 @@ namespace Liddup.Droid.Services
             LogStatus("Playback error! Error: " + error);
         }
 
-        public void OnPlaybackEvent(PlayerEvent p0)
+        public void OnPlaybackEvent(PlayerEvent e)
         {
             _currentPlaybackState = _spotifyPlayer.PlaybackState;
             _metadata = _spotifyPlayer.Metadata;
@@ -116,7 +114,7 @@ namespace Liddup.Droid.Services
         {
             _spotifyPlayer.PlayUri(_operationCallbackDelegate, uri, 0, 0);
         }
-
+        
         private static void LogStatus(string status)
         {
             System.Diagnostics.Debug.WriteLine(status);
