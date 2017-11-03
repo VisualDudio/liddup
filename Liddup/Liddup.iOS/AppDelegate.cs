@@ -15,6 +15,7 @@ namespace Liddup.iOS
     [Register("AppDelegate")]
     public partial class AppDelegate : global::Xamarin.Forms.Platform.iOS.FormsApplicationDelegate
     {
+        public event EventHandler<OpenUrlEventArgs> OpenUrlDelegate = delegate { };
         //
         // This method is invoked when the application has loaded and is ready to run. In this 
         // method you should instantiate the window, load the UI into it and then make the window
@@ -28,6 +29,18 @@ namespace Liddup.iOS
             LoadApplication(new App());
 
             return base.FinishedLaunching(app, options);
+        }
+
+        public override bool OpenUrl(UIApplication app, NSUrl url, NSDictionary options)
+        {
+            OpenUrlDelegate(this, new OpenUrlEventArgs
+            {
+                App = app,
+                Url = url,
+                Options = options
+            });
+
+            return base.OpenUrl(app, url, options);
         }
     }
 }
