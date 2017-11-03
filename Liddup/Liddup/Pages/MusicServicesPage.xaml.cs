@@ -8,10 +8,6 @@ using Plugin.MediaManager;
 using GoogleMusicApi.Common;
 using GoogleMusicApi.Structure;
 
-using TidalSharp.Models;
-using TidalSharp.Models.Static;
-using TidalSharp.Controllers;
-
 namespace Liddup.Pages
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]

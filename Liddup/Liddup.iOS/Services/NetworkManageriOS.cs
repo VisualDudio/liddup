@@ -1,7 +1,7 @@
-﻿using System.Net.NetworkInformation;
+﻿using System;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
-using Couchbase.Lite;
-using Couchbase.Lite.Listener.Tcp;
+using System.Text;
 using Liddup.iOS.Services;
 using Liddup.Services;
 using NetworkExtension;
@@ -14,12 +14,6 @@ namespace Liddup.iOS.Services
 {
     internal class NetworkManageriOS : INetworkManager
     {
-        public void Start(Manager manager, ushort port)
-        {
-            var listener = new CouchbaseLiteTcpListener(manager, port);
-            listener.Start();
-        }
-
         public string GetIPAddress()
         {
             var ipAddress = "";
