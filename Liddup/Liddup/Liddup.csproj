@@ -7,13 +7,15 @@
     <PackageReference Include="Couchbase.Lite-PCL" Version="1.4.0" />
     <PackageReference Include="Couchbase.Lite.Listener" Version="1.4.0" />
     <PackageReference Include="Couchbase.Lite.Listener.Bonjour" Version="1.4.0" />
+    <PackageReference Include="E.Deezer" Version="2.5.0" />
     <PackageReference Include="Google.Music.Api" Version="1.0.0.20" />
     <PackageReference Include="Microsoft.NETCore.Portable.Compatibility" Version="1.0.2" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
     <PackageReference Include="PCLStorage" Version="1.0.2" />
     <PackageReference Include="Plugin.MediaManager" Version="0.4.5" />
-    <PackageReference Include="SpotifyAPI-NET" Version="2.16.0" />
-    <PackageReference Include="Xamarin.Forms" Version="2.5.0.19271-pre2" />
+    <PackageReference Include="SpotifyAPI-NET" Version="2.16.1" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.4.0" />
+    <PackageReference Include="Xamarin.Forms" Version="2.4.0.38779" />
     <PackageReference Include="Zeroconf" Version="2.9.0" />
   </ItemGroup>
   <ItemGroup>

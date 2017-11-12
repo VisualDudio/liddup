@@ -18,7 +18,7 @@ namespace Liddup.Services
         private const ushort Port = 5431;
         private const string Scheme = "http";
         public static string Host;
-        private const string DatabaseName = "liddupsongs0005";
+        private const string DatabaseName = "liddupsongs00003";
 
         static SongManager()
         {
@@ -28,14 +28,15 @@ namespace Liddup.Services
         public static Song GetSong(string id)
         {
             var doc = Database.GetDocument(id);
-            var props = doc.UserProperties;
+            var properties = doc.UserProperties;
             var song = new Song
             {
                 Id = id,
-                Title = props["title"].ToString(),
-                Uri = props["uri"].ToString(),
-                Votes = Convert.ToInt32(props["votes"].ToString()),
-                Source = props["source"].ToString()
+                Title = properties["title"].ToString(),
+                Uri = properties["uri"].ToString(),
+                Votes = Convert.ToInt32(properties["votes"].ToString()),
+                Source = properties["source"].ToString(),
+                Skips = Convert.ToInt32(properties["skips"].ToString())
             };
 
             return song;
@@ -63,7 +64,8 @@ namespace Liddup.Services
                         Title = row.Document.UserProperties["title"].ToString(),
                         Uri = row.Document.UserProperties["uri"].ToString(),
                         Votes = Convert.ToInt32(row.Document.UserProperties["votes"].ToString()),
-                        Source = row.Document.UserProperties["source"].ToString()
+                        Source = row.Document.UserProperties["source"].ToString(),
+                        Skips = Convert.ToInt32(row.Document.UserProperties["skips"].ToString())
                     };
                     songs.Add(song);
                 }
@@ -101,6 +103,7 @@ namespace Liddup.Services
                     doc.Update(newRevision =>
                     {
                         var properties = newRevision.UserProperties;
+                        var attachments = newRevision.Attachments;
                         if (song.Source.Equals("Library"))
                             newRevision.SetAttachment("contents", "audio/mpeg", song.Contents);
                         properties["votes"] = song.Votes;

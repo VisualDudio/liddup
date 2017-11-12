@@ -3,11 +3,6 @@ using Liddup.Services;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-using Plugin.MediaManager;
-
-using GoogleMusicApi.Common;
-using GoogleMusicApi.Structure;
-
 namespace Liddup.Pages
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
@@ -31,9 +26,9 @@ namespace Liddup.Pages
             await Navigation.PushAsync(new LibrarySongsPage());
         }
 
-        private void ConnectGooglePlayMusicButton_OnClicked(object sender, EventArgs e)
+        private void ConnectDeezerButton_OnClicked(object sender, EventArgs e)
         {
-           
+
         }
     }
 }

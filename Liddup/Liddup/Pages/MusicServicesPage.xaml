@@ -12,7 +12,7 @@
             <Label Text="Add Music" FontSize="30" VerticalOptions="Center" HorizontalOptions="Center" BackgroundColor="#9068be" TextColor="White" AbsoluteLayout.LayoutBounds="0.5, 0, 200, 75" AbsoluteLayout.LayoutFlags="PositionProportional"/>
             <StackLayout AbsoluteLayout.LayoutBounds="0.5, 0.5" AbsoluteLayout.LayoutFlags="PositionProportional">
                 <Button x:Name="ConnectSpotifyButton" Clicked="ConnectSpotifyButton_OnClicked" Text="Spotify" FontSize="30" HeightRequest="80" WidthRequest="250" VerticalOptions="Center" HorizontalOptions="Center" BackgroundColor="#6ed3cf" TextColor="White" Margin="0,0,0,30"/>
-                <Button x:Name="ConnectGooglePlayMusicButton" Clicked="ConnectGooglePlayMusicButton_OnClicked" Text="Google Play Music" FontSize="30" HeightRequest="80" WidthRequest="250" VerticalOptions="Center" HorizontalOptions="Center" BackgroundColor="#6ed3cf" TextColor="White" Margin="0,0,0,30"/>
+                <Button x:Name="ConnectDeezerButton" Clicked="ConnectDeezerButton_OnClicked" Text="Deezer" FontSize="30" HeightRequest="80" WidthRequest="250" VerticalOptions="Center" HorizontalOptions="Center" BackgroundColor="#6ed3cf" TextColor="White" Margin="0,0,0,30"/>
                 <Button x:Name="LibraryButton" Clicked="LibraryButton_OnClicked" Text="Library" FontSize="30" HeightRequest="80" WidthRequest="250" VerticalOptions="Center" HorizontalOptions="Center" BackgroundColor="#6ed3cf" TextColor="White"/>
             </StackLayout>
         </AbsoluteLayout>

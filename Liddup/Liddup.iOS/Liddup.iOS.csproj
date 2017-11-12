@@ -27,6 +27,7 @@
     <MtouchArch>i386, x86_64</MtouchArch>
     <MtouchLink>None</MtouchLink>
     <MtouchDebug>true</MtouchDebug>
+    <MtouchExtraArgs>-gcc_flags "-ObjC"</MtouchExtraArgs>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <DebugType>none</DebugType>
@@ -51,6 +52,7 @@
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchDebug>true</MtouchDebug>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+    <MtouchLink>Full</MtouchLink>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <DebugType>none</DebugType>
@@ -62,6 +64,7 @@
     <ConsolePause>false</ConsolePause>
     <CodesignKey>iPhone Developer</CodesignKey>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+    <MtouchLink>SdkOnly</MtouchLink>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Ad-Hoc|iPhone' ">
     <DebugType>none</DebugType>
@@ -87,6 +90,9 @@
     <CodesignProvision>Automatic:AppStore</CodesignProvision>
     <CodesignKey>iPhone Distribution</CodesignKey>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'Default' ">
+    <AppExtensionDebugBundleId />
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Delegates\OpenUrlEventArgs.cs" />
@@ -146,6 +152,12 @@
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.10.0.3\lib\netstandard1.3\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="PCLStorage, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\PCLStorage.1.0.2\lib\portable-Xamarin.iOS+Xamarin.Mac\PCLStorage.dll</HintPath>
+    </Reference>
+    <Reference Include="PCLStorage.Abstractions, Version=1.0.3.0, Culture=neutral, PublicKeyToken=286fe515a2c35b64, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\PCLStorage.Abstractions.1.0.3\lib\netstandard1.0\PCLStorage.Abstractions.dll</HintPath>
+    </Reference>
     <Reference Include="Plugin.MediaManager, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Plugin.MediaManager.0.4.5\lib\Xamarin.iOS10\Plugin.MediaManager.dll</HintPath>
     </Reference>
@@ -153,10 +165,11 @@
       <HintPath>..\..\packages\Plugin.MediaManager.0.4.5\lib\Xamarin.iOS10\Plugin.MediaManager.Abstractions.dll</HintPath>
     </Reference>
     <Reference Include="SpotifyAPI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\SpotifyAPI-NET.2.16.0\lib\SpotifyAPI.dll</HintPath>
+      <HintPath>..\..\packages\SpotifyAPI-NET.2.16.1\lib\SpotifyAPI.dll</HintPath>
     </Reference>
-    <Reference Include="SpotifyBindingiOS">
-      <HintPath>..\..\..\..\..\Documents\Visual Studio 2017\Projects\SpotifyBindingiOS\SpotifyBindingiOS\bin\Debug\SpotifyBindingiOS.dll</HintPath>
+    <Reference Include="SpotifyiOSSDK, Version=1.0.6522.1415, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Documents\Visual Studio 2017\Projects\SpotifyiOSSDK\SpotifyiOSSDK\bin\Debug\SpotifyiOSSDK.dll</HintPath>
     </Reference>
     <Reference Include="SQLitePCL.raw, Version=0.9.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\SQLitePCL.raw.0.9.3\lib\Xamarin.iOS10\SQLitePCL.raw.dll</HintPath>
@@ -168,6 +181,7 @@
       <HintPath>..\..\packages\Stateless.4.0.0\lib\netstandard1.0\Stateless.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\..\Windows\Microsoft.NET\Framework\v4.0.30319\System.Drawing.dll</HintPath>
@@ -231,10 +245,10 @@
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\NETStandard.Library.2.0.0\build\netstandard2.0\NETStandard.Library.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\NETStandard.Library.2.0.0\build\netstandard2.0\NETStandard.Library.targets'))" />
     <Error Condition="!Exists('..\..\packages\Xamarin.Forms.2.4.0.38779\build\netstandard1.0\Xamarin.Forms.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Xamarin.Forms.2.4.0.38779\build\netstandard1.0\Xamarin.Forms.props'))" />
     <Error Condition="!Exists('..\..\packages\Xamarin.Forms.2.4.0.38779\build\netstandard1.0\Xamarin.Forms.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Xamarin.Forms.2.4.0.38779\build\netstandard1.0\Xamarin.Forms.targets'))" />
+    <Error Condition="!Exists('..\..\packages\NETStandard.Library.2.0.0\build\netstandard2.0\NETStandard.Library.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\NETStandard.Library.2.0.0\build\netstandard2.0\NETStandard.Library.targets'))" />
   </Target>
-  <Import Project="..\..\packages\NETStandard.Library.2.0.0\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\..\packages\NETStandard.Library.2.0.0\build\netstandard2.0\NETStandard.Library.targets')" />
   <Import Project="..\..\packages\Xamarin.Forms.2.4.0.38779\build\netstandard1.0\Xamarin.Forms.targets" Condition="Exists('..\..\packages\Xamarin.Forms.2.4.0.38779\build\netstandard1.0\Xamarin.Forms.targets')" />
+  <Import Project="..\..\packages\NETStandard.Library.2.0.0\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\..\packages\NETStandard.Library.2.0.0\build\netstandard2.0\NETStandard.Library.targets')" />
 </Project>

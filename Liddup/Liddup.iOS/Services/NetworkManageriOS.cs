@@ -6,8 +6,6 @@ using Liddup.iOS.Services;
 using Liddup.Services;
 using NetworkExtension;
 using Xamarin.Forms;
-using System.Text;
-using System;
 
 [assembly: Dependency(typeof(NetworkManageriOS))]
 namespace Liddup.iOS.Services
@@ -67,9 +65,11 @@ namespace Liddup.iOS.Services
         {
             var hotspotNetwork = new NEHotspotNetwork();
             
-            hotspotNetwork.SetPassword("password");
-            hotspotNetwork.Init();
-            System.Diagnostics.Debug.WriteLine(hotspotNetwork.Ssid);
+            var hotspotConfiguration = new NEHotspotConfiguration("wifi name", "wifi password", false)
+            {
+                JoinOnce = true
+            };
+            NEHotspotConfigurationManager.SharedManager.ApplyConfiguration(hotspotConfiguration, null);
         }
     }
 }

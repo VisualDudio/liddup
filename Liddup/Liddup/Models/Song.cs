@@ -14,6 +14,8 @@ namespace Liddup.Models
 
         private int _votes;
         private bool _isPlaying;
+        private int _skips;
+        private bool _didVote;
 
         public string Id { get; set; }
         public string Title { get; set; }
@@ -48,6 +50,32 @@ namespace Liddup.Models
             }
         }
 
+        public int Skips
+        {
+            get => _skips;
+            set
+            {
+                if (_skips == value)
+                    return;
+                _skips = value;
+
+                OnPropertyChanged();
+            }
+        }
+
+        public bool DidVote
+        {
+            get => _didVote;
+            set
+            {
+                if (_didVote == value)
+                    return;
+                _didVote = value;
+
+                OnPropertyChanged();
+            }
+        }
+
         public Dictionary<string, object> ToDictionary()
         {
             var dictionary = new Dictionary<string, object>
@@ -56,7 +84,8 @@ namespace Liddup.Models
                 {"uri", Uri },
                 {"source", Source },
                 {"votes", _votes },
-                {"isPlaying", _isPlaying }
+                {"isPlaying", _isPlaying },
+                {"skips", _skips }
             };
 
             return dictionary;
