@@ -1,4 +1,6 @@
-﻿namespace Liddup.Services
+﻿using System.Threading.Tasks;
+
+namespace Liddup.Services
 {
     public interface ISpotifyApi
     {
@@ -7,5 +9,7 @@
 
         void Login();
         void PlayTrack(string uri);
+        void ResumeTrack();
+        void PauseTrack();
     }
 }

@@ -4,23 +4,96 @@
     <PackageTargetFallback>$(PackageTargetFallback);portable-win+net45+wp8+win81+wpa8</PackageTargetFallback>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Resources\chevron_white.svg" />
+    <None Remove="Resources\header_wordmark.svg" />
+    <None Remove="Resources\heart_filled.svg" />
+    <None Remove="Resources\heart_hollow.svg" />
+    <None Remove="Resources\icon_add_red.svg" />
+    <None Remove="Resources\icon_add_white.svg" />
+    <None Remove="Resources\icon_home_red.svg" />
+    <None Remove="Resources\icon_home_white.svg" />
+    <None Remove="Resources\icon_repeat_red.svg" />
+    <None Remove="Resources\icon_repeat_white.svg" />
+    <None Remove="Resources\icon_skip_red.svg" />
+    <None Remove="Resources\icon_skip_white.svg" />
+    <None Remove="Resources\liddup_wordmark_white.svg" />
+    <None Remove="Resources\logo_green.svg" />
+    <None Remove="Resources\logo_grey.svg" />
+    <None Remove="Resources\logo_white.svg" />
+    <None Remove="Resources\magnifying_glass_icon_white.svg" />
+    <None Remove="Resources\pause_button.svg" />
+    <None Remove="Resources\play_button.svg" />
+    <None Remove="Resources\plus_white.svg" />
+    <None Remove="Resources\repeat_icon_red.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\chevron_white.svg" />
+    <EmbeddedResource Include="Resources\header_wordmark.svg" />
+    <EmbeddedResource Include="Resources\heart_filled.svg" />
+    <EmbeddedResource Include="Resources\heart_hollow.svg" />
+    <EmbeddedResource Include="Resources\icon_add_red.svg" />
+    <EmbeddedResource Include="Resources\icon_add_white.svg" />
+    <EmbeddedResource Include="Resources\icon_home_red.svg" />
+    <EmbeddedResource Include="Resources\icon_home_white.svg" />
+    <EmbeddedResource Include="Resources\icon_repeat_red.svg" />
+    <EmbeddedResource Include="Resources\icon_repeat_white.svg" />
+    <EmbeddedResource Include="Resources\icon_skip_red.svg" />
+    <EmbeddedResource Include="Resources\icon_skip_white.svg" />
+    <EmbeddedResource Include="Resources\liddup_wordmark_white.svg" />
+    <EmbeddedResource Include="Resources\logo_green.svg" />
+    <EmbeddedResource Include="Resources\logo_grey.svg" />
+    <EmbeddedResource Include="Resources\logo_white.svg" />
+    <EmbeddedResource Include="Resources\magnifying_glass_icon_white.svg" />
+    <EmbeddedResource Include="Resources\pause_button.svg" />
+    <EmbeddedResource Include="Resources\play_button.svg" />
+    <EmbeddedResource Include="Resources\plus_white.svg" />
+    <EmbeddedResource Include="Resources\repeat_icon_red.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="CarouselView.FormsPlugin" Version="5.0.2" />
+    <PackageReference Include="Couchbase.Lite" Version="1.4.1" />
     <PackageReference Include="Couchbase.Lite-PCL" Version="1.4.0" />
-    <PackageReference Include="Couchbase.Lite.Listener" Version="1.4.0" />
-    <PackageReference Include="Couchbase.Lite.Listener.Bonjour" Version="1.4.0" />
-    <PackageReference Include="E.Deezer" Version="2.5.0" />
-    <PackageReference Include="Google.Music.Api" Version="1.0.0.20" />
+    <PackageReference Include="Couchbase.Lite.Listener" Version="1.4.1" />
+    <PackageReference Include="Couchbase.Lite.Listener.Bonjour" Version="1.4.1" />
+    <PackageReference Include="DLToolkit.Forms.Controls.FlowListView" Version="2.0.10" />
+    <PackageReference Include="Fody" Version="2.2.1" />
+    <PackageReference Include="FormsCommunityToolkit.Effects" Version="1.0.0.110-beta" />
+    <PackageReference Include="FreshMvvm" Version="2.2.3" />
     <PackageReference Include="Microsoft.NETCore.Portable.Compatibility" Version="1.0.2" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
     <PackageReference Include="PCLStorage" Version="1.0.2" />
     <PackageReference Include="Plugin.MediaManager" Version="0.4.5" />
-    <PackageReference Include="SpotifyAPI-NET" Version="2.16.1" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.4.0" />
-    <PackageReference Include="Xamarin.Forms" Version="2.4.0.38779" />
-    <PackageReference Include="Zeroconf" Version="2.9.0" />
+    <PackageReference Include="PropertyChanged.Fody" Version="2.2.4" />
+    <PackageReference Include="SpotifyAPI-NET" Version="2.17.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.4.2" />
+    <PackageReference Include="Xamarin.FFImageLoading.Forms" Version="2.2.25" />
+    <PackageReference Include="Xamarin.FFImageLoading.Svg.Forms" Version="2.2.25" />
+    <PackageReference Include="Xamarin.FFImageLoading.Transformations" Version="2.2.25" />
+    <PackageReference Include="Xamarin.Forms" Version="2.5.0.121934" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Plugin.MediaManager">
       <HintPath>..\..\..\..\..\.nuget\packages\plugin.mediamanager\0.4.5\lib\uap10.0\Plugin.MediaManager.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Pages\LocalLibraryPage.xaml.cs">
+      <DependentUpon>LocalLibraryPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\AddSongsPage.xaml.cs">
+      <DependentUpon>AddSongsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\SpotifyLibraryPage.xaml.cs">
+      <DependentUpon>SpotifyLibraryPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\PlaylistPage.xaml.cs">
+      <DependentUpon>PlaylistPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\PlaylistsPage.xaml.cs">
+      <DependentUpon>PlaylistsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Pages\SongsPage.xaml.cs">
+      <DependentUpon>SongsPage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

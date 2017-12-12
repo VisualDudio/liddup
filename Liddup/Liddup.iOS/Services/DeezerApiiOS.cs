@@ -1,4 +1,6 @@
-﻿namespace Liddup.iOS.Services
+﻿using StoreKit;
+
+namespace Liddup.iOS.Services
 {
     internal class DeezerApiiOS
     {

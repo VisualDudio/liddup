@@ -1,0 +1,189 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentView
+    x:Class="Liddup.Pages.PlaylistPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:converters="clr-namespace:Liddup.Converters;assembly=Liddup"
+    xmlns:ff="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+    xmlns:ffsvg="clr-namespace:FFImageLoading.Svg.Forms;assembly=FFImageLoading.Svg.Forms"
+    xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
+    xmlns:local="clr-namespace:Liddup.TemplateSelectors;assembly=Liddup"
+    xmlns:pagemodels="clr-namespace:Liddup.PageModels;assembly=Liddup"
+    BackgroundColor="Black">
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <converters:SecondsToTimeConverter x:Key="SecondsToTimeConverter" />
+            <DataTemplate x:Key="songInQueueTemplate">
+                <ViewCell>
+                    <StackLayout
+                        Margin="0,3,0,3"
+                        Padding="10,0"
+                        Orientation="Horizontal">
+                        <Label
+                            Margin="0,10,-5,10"
+                            FontSize="14"
+                            HorizontalOptions="Start"
+                            HorizontalTextAlignment="Start"
+                            Text="{Binding Votes}"
+                            TextColor="White"
+                            VerticalOptions="Center"
+                            VerticalTextAlignment="Center"
+                            WidthRequest="25" />
+                        <ffsvg:SvgCachedImage
+                            Margin="0,10,5,10"
+                            Aspect="AspectFill"
+                            HeightRequest="25"
+                            IsOpaque="True"
+                            Source="{Binding HeartIcon}"
+                            VerticalOptions="Center"
+                            WidthRequest="25">
+                            <ffsvg:SvgCachedImage.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ToggleVoteCommand}" />
+                            </ffsvg:SvgCachedImage.GestureRecognizers>
+                        </ffsvg:SvgCachedImage>
+                        <StackLayout
+                            Margin="5,0"
+                            HorizontalOptions="FillAndExpand"
+                            VerticalOptions="CenterAndExpand">
+                            <Label
+                                Margin="0"
+                                FontSize="16"
+                                LineBreakMode="TailTruncation"
+                                Text="{Binding Title}"
+                                TextColor="White"
+                                VerticalOptions="Start" />
+                            <Label
+                                Margin="0,-5,0,0"
+                                FontSize="12"
+                                LineBreakMode="TailTruncation"
+                                Text="{Binding Artist}"
+                                TextColor="Gray"
+                                VerticalOptions="FillAndExpand" />
+                        </StackLayout>
+                        <Label
+                            Margin="5,10"
+                            FontSize="14"
+                            HorizontalOptions="End"
+                            HorizontalTextAlignment="End"
+                            Text="{Binding DurationInSeconds, Converter={StaticResource SecondsToTimeConverter}}"
+                            TextColor="White"
+                            VerticalOptions="Center"
+                            VerticalTextAlignment="Center"
+                            WidthRequest="50" />
+                    </StackLayout>
+                </ViewCell>
+            </DataTemplate>
+            <DataTemplate x:Key="songNotInQueueTemplate">
+                <ViewCell>
+                    <StackLayout
+                        x:Name="Song"
+                        Margin="25,3,0,3"
+                        Padding="10,0"
+                        Orientation="Horizontal">
+                        <ffsvg:SvgCachedImage
+                            Margin="0,10,5,10"
+                            Aspect="AspectFill"
+                            HeightRequest="25"
+                            HorizontalOptions="Start"
+                            IsOpaque="True"
+                            Source="resource://Liddup.Resources.plus_white.svg"
+                            VerticalOptions="Center"
+                            WidthRequest="25">
+                            <ffsvg:SvgCachedImage.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    BindingContext="{Binding Source={x:Reference SongList}, Path=BindingContext}"
+                                    Command="{Binding AddSongToQueueCommand}"
+                                    CommandParameter="{Binding Source={x:Reference Song}, Path=BindingContext}" />
+                            </ffsvg:SvgCachedImage.GestureRecognizers>
+                        </ffsvg:SvgCachedImage>
+                        <StackLayout
+                            Margin="5,0"
+                            HorizontalOptions="FillAndExpand"
+                            VerticalOptions="CenterAndExpand">
+                            <Label
+                                Margin="0"
+                                FontSize="16"
+                                LineBreakMode="TailTruncation"
+                                Text="{Binding Title}"
+                                TextColor="White"
+                                VerticalOptions="Start" />
+                            <Label
+                                Margin="0,-5,0,0"
+                                FontSize="12"
+                                LineBreakMode="TailTruncation"
+                                Text="{Binding Artist}"
+                                TextColor="Gray"
+                                VerticalOptions="FillAndExpand" />
+                        </StackLayout>
+                        <Label
+                            Margin="5,10"
+                            FontSize="14"
+                            HorizontalOptions="End"
+                            HorizontalTextAlignment="End"
+                            Text="{Binding DurationInSeconds, Converter={StaticResource SecondsToTimeConverter}}"
+                            TextColor="White"
+                            VerticalOptions="Center"
+                            VerticalTextAlignment="Center"
+                            WidthRequest="50" />
+                    </StackLayout>
+                </ViewCell>
+            </DataTemplate>
+            <local:SongDataTemplateSelector
+                x:Key="songDataTemplateSelector"
+                InQueueTemplate="{StaticResource songInQueueTemplate}"
+                NotInQueueTemplate="{StaticResource songNotInQueueTemplate}" />
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <StackLayout Padding="10,20,10,10" Spacing="10">
+        <Grid
+            Margin="0,0,35,0"
+            ColumnSpacing="10"
+            HorizontalOptions="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="160" />
+                <RowDefinition Height="35" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="35" />
+                <ColumnDefinition Width="160" />
+            </Grid.ColumnDefinitions>
+            <ffsvg:SvgCachedImage
+                Aspect="AspectFill"
+                IsOpaque="True"
+                Source="resource://Liddup.Resources.chevron_white.svg"
+                VerticalOptions="Center">
+                <ffsvg:SvgCachedImage.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding NavigateToPlaylistsPageCommand}" />
+                </ffsvg:SvgCachedImage.GestureRecognizers>
+            </ffsvg:SvgCachedImage>
+            <ff:CachedImage
+                Grid.Column="1"
+                Margin="0,0,0,0"
+                Aspect="AspectFill"
+                HorizontalOptions="Center"
+                IsOpaque="True"
+                Source="{Binding SelectedPlaylist.ImageUrl}">
+                <ff:CachedImage.Transformations>
+                    <fftransformations:RoundedTransformation>
+                        <fftransformations:RoundedTransformation.Radius>15</fftransformations:RoundedTransformation.Radius>
+                    </fftransformations:RoundedTransformation>
+                </ff:CachedImage.Transformations>
+            </ff:CachedImage>
+            <Label
+                Grid.Row="1"
+                Grid.Column="1"
+                FontSize="24"
+                HorizontalOptions="Center"
+                LineBreakMode="TailTruncation"
+                Style="{StaticResource TitleStyle}"
+                Text="{Binding SelectedPlaylist.Name}" />
+        </Grid>
+
+        <ListView
+            x:Name="SongList"
+            BackgroundColor="Black"
+            CachingStrategy="RecycleElement"
+            ItemTemplate="{StaticResource songDataTemplateSelector}"
+            ItemsSource="{Binding Songs}" />
+    </StackLayout>
+</ContentView>

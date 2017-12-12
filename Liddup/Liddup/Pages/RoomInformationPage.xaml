@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="Liddup.Pages.RoomInformationPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:Liddup.Controls;assembly=Liddup"
+    xmlns:pagemodels="clr-namespace:Liddup.PageModels;assembly=Liddup"
+    BackgroundColor="Black">
+    <ContentView.BindingContext>
+        <pagemodels:RoomInformationPageModel />
+    </ContentView.BindingContext>
+    <StackLayout
+        Padding="20"
+        HorizontalOptions="CenterAndExpand"
+        Spacing="5"
+        VerticalOptions="StartAndExpand">
+        <Label
+            FontSize="16"
+            HorizontalOptions="Center"
+            Style="{StaticResource TitleStyle}"
+            Text="Currently in:"
+            VerticalOptions="Center" />
+        <Label
+            Margin="0,0,0,20"
+            FontSize="26"
+            HorizontalOptions="Center"
+            Style="{StaticResource SubtitleStyle}"
+            Text="{Binding RoomName}"
+            VerticalOptions="Center" />
+        <Label
+            FontSize="16"
+            HorizontalOptions="Center"
+            Style="{StaticResource TitleStyle}"
+            Text="Invite code:"
+            VerticalOptions="Center" />
+        <controls:UnderlinedEntry
+            Margin="0,0,0,10"
+            BackgroundColor="Transparent"
+            BorderColor="White"
+            FontSize="28"
+            HorizontalOptions="Center"
+            HorizontalTextAlignment="Center"
+            InputTransparent="True"
+            LetterSpacing="0.3"
+            Text="{Binding RoomCode}"
+            TextColor="White"
+            VerticalOptions="Center">
+            <controls:UnderlinedEntry.FontFamily>
+                <OnPlatform x:TypeArguments="x:String">
+                    <On Platform="iOS" Value="GlacialIndifference-Regular" />
+                    <On Platform="Android" Value="GlacialIndifference-Regular.otf#GlacialIndifference-Regular" />
+                </OnPlatform>
+            </controls:UnderlinedEntry.FontFamily>
+        </controls:UnderlinedEntry>
+
+        <Button
+            Margin="0,0,0,40"
+            HorizontalOptions="Center"
+            Style="{StaticResource TransparentButtonStyle}"
+            Text="Copy"
+            VerticalOptions="Center" />
+
+        <StackLayout
+            Margin="0,0,0,40"
+            HorizontalOptions="Center"
+            Orientation="Horizontal"
+            Spacing="25">
+            <Label
+                Style="{StaticResource TitleStyle}"
+                Text="Allow explicit songs: "
+                VerticalOptions="Center" />
+            <Switch
+                IsEnabled="False"
+                IsToggled="{Binding AllowsExplicitSongs}"
+                VerticalOptions="Center" />
+        </StackLayout>
+
+        <Label
+            HorizontalOptions="Center"
+            Style="{StaticResource TitleStyle}"
+            Text="Song limit per user" />
+        <Slider
+            x:Name="SongRequestSlider"
+            HorizontalOptions="Center"
+            IsEnabled="False"
+            Maximum="5"
+            Minimum="0"
+            WidthRequest="300"
+            Value="{Binding SongRequestLimit}" />
+        <Label
+            Margin="0,0,0,40"
+            HorizontalOptions="Center"
+            Style="{StaticResource TitleStyle}"
+            Text="{Binding Source={x:Reference SongRequestSlider}, Path=Value}" />
+
+        <controls:BorderedButton
+            HorizontalOptions="Center"
+            Style="{StaticResource OpaqueButtonStyle}"
+            Text="Leave Room"
+            VerticalOptions="Center" />
+    </StackLayout>
+</ContentView>

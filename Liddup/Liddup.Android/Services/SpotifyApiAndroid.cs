@@ -9,6 +9,7 @@ using Liddup.Services;
 using Liddup.Constants;
 using Xamarin.Forms;
 using Error = Com.Spotify.Sdk.Android.Player.Error;
+using System.Threading.Tasks;
 
 [assembly: Dependency(typeof(SpotifyApiAndroid))]
 namespace Liddup.Droid.Services
@@ -114,7 +115,22 @@ namespace Liddup.Droid.Services
         {
             _spotifyPlayer.PlayUri(_operationCallbackDelegate, uri, 0, 0);
         }
-        
+
+        public void ResumeTrack()
+        {
+            _spotifyPlayer.Resume(null);
+        }
+
+        public void PauseTrack()
+        {
+            _spotifyPlayer.Pause(null);
+        }
+
+        public void SeekToPosition()
+        {
+            _spotifyPlayer.SeekToPosition(null, 0);
+        }
+
         private static void LogStatus(string status)
         {
             System.Diagnostics.Debug.WriteLine(status);

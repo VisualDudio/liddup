@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="Liddup.Pages.HostRoomInformationPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:Liddup.Controls;assembly=Liddup"
+    BackgroundColor="Black">
+    <StackLayout
+        Padding="20"
+        HorizontalOptions="CenterAndExpand"
+        Spacing="20"
+        VerticalOptions="StartAndExpand">
+        <Label
+            FontSize="16"
+            HorizontalOptions="Center"
+            HorizontalTextAlignment="Center"
+            VerticalTextAlignment="Center">
+            <Label.FormattedText>
+                <FormattedString>
+                    <Span ForegroundColor="White" Text="Glowstick Rave ">
+                        <Span.FontFamily>
+                            <OnPlatform x:TypeArguments="x:String">
+                                <On Platform="iOS" Value="GlacialIndifference-Bold" />
+                                <On Platform="Android" Value="GlacialIndifference-Bold.otf#GlacialIndifference-Bold" />
+                            </OnPlatform>
+                        </Span.FontFamily>
+                    </Span>
+                    <Span ForegroundColor="White" Text="created.&#10;As the host, you have access&#10;to instantly toggle pause,&#10;repeat, and skip.">
+                        <Span.FontFamily>
+                            <OnPlatform x:TypeArguments="x:String">
+                                <On Platform="iOS" Value="GlacialIndifference-Regular" />
+                                <On Platform="Android" Value="GlacialIndifference-Regular.otf#GlacialIndifference-Regular" />
+                            </OnPlatform>
+                        </Span.FontFamily>
+                    </Span>
+                </FormattedString>
+            </Label.FormattedText>
+        </Label>
+
+        <Label
+            FontSize="16"
+            HorizontalOptions="Center"
+            Style="{StaticResource TitleStyle}"
+            Text="Invite code:"
+            VerticalOptions="Center" />
+
+        <controls:UnderlinedEntry
+            Margin="0,0,0,10"
+            BackgroundColor="Transparent"
+            BorderColor="White"
+            FontSize="28"
+            HorizontalOptions="Center"
+            HorizontalTextAlignment="Center"
+            InputTransparent="True"
+            LetterSpacing="0.3"
+            Text="ABCD1234"
+            TextColor="White"
+            VerticalOptions="Center">
+            <controls:UnderlinedEntry.FontFamily>
+                <OnPlatform x:TypeArguments="x:String">
+                    <On Platform="iOS" Value="GlacialIndifference-Regular" />
+                    <On Platform="Android" Value="GlacialIndifference-Regular.otf#GlacialIndifference-Regular" />
+                </OnPlatform>
+            </controls:UnderlinedEntry.FontFamily>
+        </controls:UnderlinedEntry>
+
+        <Button
+            Margin="0,0,0,40"
+            HorizontalOptions="Center"
+            Style="{StaticResource TransparentButtonStyle}"
+            Text="Copy"
+            VerticalOptions="Center" />
+        <Button
+            HorizontalOptions="Center"
+            Style="{StaticResource OpaqueButtonStyle}"
+            Text="Leave Room"
+            VerticalOptions="Center" />
+    </StackLayout>
+</ContentView>

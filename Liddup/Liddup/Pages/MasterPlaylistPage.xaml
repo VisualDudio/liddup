@@ -1,34 +1,322 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Liddup.Pages.MasterPlaylistPage"
-             NavigationPage.HasNavigationBar="false">
-    <ContentPage.Content>
-  <!--This is where the user will spend most of his/her time so it's the most important page. UI-Wise this will contain a
-            ListView (for the tracks), a few buttons for the audio player controls (skip, pause, etc. | Only the Host can use this),
-            A button for users to add music (Should navigate to the MusicServicesPage). Understanding lists will be very very important
-            to implement this page, so please try your best to learn how to properly use them.-->
-        <AbsoluteLayout BackgroundColor="#e1e8f0">
-            <ListView x:Name="MasterPlaylist" ItemSelected="MasterPlaylist_OnItemSelected" CachingStrategy="RecycleElementAndDataTemplate" AbsoluteLayout.LayoutBounds="0, .5, 1, 0.75" AbsoluteLayout.LayoutFlags="PositionProportional, SizeProportional">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <ViewCell>
-                            <StackLayout Orientation="Horizontal" Padding="5">
-                                <Label Text="{Binding Title}"/>
-                                <Button x:Name="VoteButton" Clicked="VoteButton_OnClicked" Text="{Binding Votes}" CommandParameter="{Binding .}"/>
+<ContentView
+    x:Class="Liddup.Pages.MasterPlaylistPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:Liddup.Controls;assembly=Liddup"
+    xmlns:converters="clr-namespace:Liddup.Converters;assembly=Liddup"
+    xmlns:effects="clr-namespace:Liddup.Effects;assembly=Liddup"
+    xmlns:ff="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+    xmlns:ffsvg="clr-namespace:FFImageLoading.Svg.Forms;assembly=FFImageLoading.Svg.Forms"
+    xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
+    xmlns:forms="clr-namespace:Lottie.Forms;assembly=Lottie.Forms"
+    xmlns:pagemodels="clr-namespace:Liddup.PageModels"
+    NavigationPage.HasNavigationBar="False">
+    <ContentView.BindingContext>
+        <pagemodels:MasterPlaylistPageModel />
+    </ContentView.BindingContext>
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <converters:SecondsToTimeConverter x:Key="SecondsToTimeConverter" />
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <AbsoluteLayout BackgroundColor="Black">
+        <ffsvg:SvgCachedImage
+            Margin="5,0,0,0"
+            AbsoluteLayout.LayoutBounds="0, 0, 35, 35"
+            AbsoluteLayout.LayoutFlags="XProportional"
+            Aspect="AspectFill"
+            IsOpaque="True"
+            Source="resource://Liddup.Resources.icon_home_white.svg">
+            <ffsvg:SvgCachedImage.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding NavigateToHomePageCommand}" />
+            </ffsvg:SvgCachedImage.GestureRecognizers>
+        </ffsvg:SvgCachedImage>
+        <ffsvg:SvgCachedImage
+            AbsoluteLayout.LayoutBounds="0.5, 5, 125, 25"
+            AbsoluteLayout.LayoutFlags="XProportional"
+            IsOpaque="True"
+            Source="resource://Liddup.Resources.header_wordmark.svg" />
+        <ffsvg:SvgCachedImage
+            Margin="0,0,5,0"
+            AbsoluteLayout.LayoutBounds="1, 0, 35, 35"
+            AbsoluteLayout.LayoutFlags="XProportional"
+            Aspect="AspectFill"
+            IsOpaque="True"
+            Source="resource://Liddup.Resources.icon_add_white.svg">
+            <ffsvg:SvgCachedImage.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding NavigateToAddSongsPageCommand}" />
+            </ffsvg:SvgCachedImage.GestureRecognizers>
+        </ffsvg:SvgCachedImage>
+        <StackLayout
+            Margin="0,0,0,10"
+            Padding="0,20,0,0"
+            AbsoluteLayout.LayoutBounds="0.5, 0.1, 1, 0.5"
+            AbsoluteLayout.LayoutFlags="All">
+            <Label
+                FontSize="18"
+                HorizontalOptions="Center"
+                Style="{StaticResource TitleStyle}"
+                Text="Now Playing" />
+            <AbsoluteLayout>
+                <ff:CachedImage
+                    AbsoluteLayout.LayoutBounds="0, 0, 1, 1"
+                    AbsoluteLayout.LayoutFlags="All"
+                    Aspect="AspectFill"
+                    Opacity="0.4"
+                    Source="{Binding CurrentSong.ImageUrl}" />
+                <Grid
+                    Margin="0"
+                    Padding="20,20,20,15"
+                    AbsoluteLayout.LayoutBounds="0.1, 0.1, 1, 1"
+                    AbsoluteLayout.LayoutFlags="All"
+                    ColumnSpacing="0"
+                    RowSpacing="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="2*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <ff:CachedImage
+                        Grid.RowSpan="3"
+                        Grid.ColumnSpan="3"
+                        IsOpaque="True"
+                        Source="{Binding CurrentSong.ImageUrl}">
+                        <ff:CachedImage.Transformations>
+                            <fftransformations:RoundedTransformation>
+                                <fftransformations:RoundedTransformation.Radius>15</fftransformations:RoundedTransformation.Radius>
+                            </fftransformations:RoundedTransformation>
+                        </ff:CachedImage.Transformations>
+                    </ff:CachedImage>
+                    <StackLayout
+                        Grid.RowSpan="2"
+                        Grid.Column="3"
+                        Grid.ColumnSpan="3"
+                        Margin="5,5,0,0">
+                        <Label
+                            FontSize="16"
+                            LineBreakMode="TailTruncation"
+                            Style="{StaticResource TitleStyle}"
+                            Text="{Binding CurrentSong.Title}" />
+                        <Label
+                            Grid.ColumnSpan="3"
+                            FontSize="14"
+                            LineBreakMode="TailTruncation"
+                            Style="{StaticResource SubtitleStyle}"
+                            Text="{Binding CurrentSong.Artist}"
+                            TextColor="White" />
+                    </StackLayout>
+                    <Grid
+                        Grid.Row="2"
+                        Grid.Column="3"
+                        Grid.ColumnSpan="3"
+                        Margin="0,15,0,0"
+                        ColumnSpacing="5"
+                        RowSpacing="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1.5*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <controls:ToggleIcon
+                            FadeAnimationEnabled="False"
+                            HorizontalOptions="Center"
+                            IsOpaque="True"
+                            IsTinted="{Binding CurrentSong.IsRepeatVoted}"
+                            Source="resource://Liddup.Resources.icon_repeat_white.svg"
+                            VerticalOptions="End">
+                            <controls:ToggleIcon.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ToggleRepeatSongVoteCommand}" />
+                            </controls:ToggleIcon.GestureRecognizers>
+                        </controls:ToggleIcon>
+                        <Label
+                            Grid.Row="1"
+                            Margin="0,-5,0,0"
+                            HorizontalOptions="Center"
+                            Text="{Binding CurrentSong.RepeatVotes}"
+                            TextColor="White"
+                            VerticalOptions="Start" />
+                        <ffsvg:SvgCachedImage
+                            Grid.Column="1"
+                            Aspect="AspectFill"
+                            FadeAnimationEnabled="False"
+                            HorizontalOptions="Center"
+                            IsOpaque="True"
+                            Source="{Binding CurrentPlayIcon}"
+                            VerticalOptions="Center">
+                            <ffsvg:SvgCachedImage.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding PlayPauseSongCommand}" />
+                            </ffsvg:SvgCachedImage.GestureRecognizers>
+                        </ffsvg:SvgCachedImage>
+                        <controls:ToggleIcon
+                            Grid.Column="2"
+                            Aspect="Fill"
+                            FadeAnimationEnabled="False"
+                            HorizontalOptions="Center"
+                            IsOpaque="True"
+                            IsTinted="{Binding CurrentSong.IsSkipVoted}"
+                            Source="resource://Liddup.Resources.icon_skip_white.svg"
+                            VerticalOptions="End">
+                            <controls:ToggleIcon.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ToggleSkipSongVoteCommand}" />
+                            </controls:ToggleIcon.GestureRecognizers>
+                        </controls:ToggleIcon>
+                        <Label
+                            Grid.Row="1"
+                            Grid.Column="2"
+                            Margin="0,-5,0,0"
+                            HorizontalOptions="Center"
+                            Text="{Binding CurrentSong.SkipVotes, Mode=TwoWay}"
+                            TextColor="White"
+                            VerticalOptions="Start" />
+                    </Grid>
+                    <AbsoluteLayout
+                        Grid.Row="3"
+                        Grid.ColumnSpan="6"
+                        Padding="0,0,0,0">
+                        <Slider
+                            x:Name="audioSlider"
+                            Margin="0,0,0,5"
+                            AbsoluteLayout.LayoutBounds="0, 0.5, 1, 20"
+                            AbsoluteLayout.LayoutFlags="PositionProportional, WidthProportional"
+                            HorizontalOptions="FillAndExpand"
+                            Maximum="{Binding CurrentSong.DurationInSeconds}"
+                            Minimum="0"
+                            Value="{Binding Ticks, Mode=TwoWay}">
+                            <Slider.Effects>
+                                <effects:AudioSliderEffect />
+                            </Slider.Effects>
+                        </Slider>
+                        <Label
+                            Margin="0,2,0,0"
+                            AbsoluteLayout.LayoutBounds="0, 1, 0.1, 0.4"
+                            AbsoluteLayout.LayoutFlags="All"
+                            FontSize="12"
+                            HorizontalTextAlignment="Start"
+                            Text="{Binding Ticks, Converter={StaticResource SecondsToTimeConverter}}"
+                            TextColor="White" />
+                        <Label
+                            Margin="0,2,0,0"
+                            AbsoluteLayout.LayoutBounds="1, 1, 0.1, 0.4"
+                            AbsoluteLayout.LayoutFlags="All"
+                            FontSize="12"
+                            HorizontalTextAlignment="End"
+                            Text="{Binding CurrentSong.DurationInSeconds, Converter={StaticResource SecondsToTimeConverter}}"
+                            TextColor="White" />
+                    </AbsoluteLayout>
+                </Grid>
+            </AbsoluteLayout>
+        </StackLayout>
+        <ListView
+            x:Name="MasterPlaylist"
+            Margin="5,0,5,5"
+            AbsoluteLayout.LayoutBounds="0, 1, 1, 0.45"
+            AbsoluteLayout.LayoutFlags="All"
+            BackgroundColor="Black"
+            CachingStrategy="RecycleElement"
+            Header="Vote for what plays next"
+            ItemsSource="{Binding Songs}"
+            SeparatorVisibility="None"
+            VerticalOptions="EndAndExpand">
+            <ListView.Header>
+                <Label
+                    Margin="0,5"
+                    HorizontalOptions="Center"
+                    HorizontalTextAlignment="Center"
+                    Style="{StaticResource SubtitleStyle}"
+                    Text="Vote for what plays next"
+                    TextColor="White"
+                    VerticalOptions="Center"
+                    VerticalTextAlignment="Center" />
+            </ListView.Header>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout
+                            Margin="0,3,0,3"
+                            Padding="10,0"
+                            Orientation="Horizontal">
+                            <Label
+                                Margin="0,10,-5,10"
+                                FontSize="14"
+                                HorizontalOptions="Start"
+                                HorizontalTextAlignment="Start"
+                                Text="{Binding Votes}"
+                                TextColor="White"
+                                VerticalOptions="Center"
+                                VerticalTextAlignment="Center"
+                                WidthRequest="25" />
+
+                            <ffsvg:SvgCachedImage
+                                Margin="0,10,5,10"
+                                Aspect="AspectFill"
+                                HeightRequest="25"
+                                IsOpaque="True"
+                                Source="{Binding HeartIcon}"
+                                VerticalOptions="Center"
+                                WidthRequest="25">
+                                <ffsvg:SvgCachedImage.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding ToggleVoteCommand}" />
+                                </ffsvg:SvgCachedImage.GestureRecognizers>
+                            </ffsvg:SvgCachedImage>
+                            <!--<forms:AnimationView x:Name="AnimationView"
+                                                         Animation="favorite_black.json"
+                                                         Loop="True"
+                                                         AutoPlay="True"
+                                                         Scale="5"
+                                                          WidthRequest="25"
+                                           HeightRequest="25"
+                                           Margin="0, 10, 5, 10"
+                                           HorizontalOptions="Start"
+                                           VerticalOptions="Center" />-->
+                            <StackLayout
+                                Margin="5,0"
+                                HorizontalOptions="FillAndExpand"
+                                VerticalOptions="CenterAndExpand">
+                                <Label
+                                    Margin="0"
+                                    FontSize="16"
+                                    LineBreakMode="TailTruncation"
+                                    Text="{Binding Title}"
+                                    TextColor="White"
+                                    VerticalOptions="Start" />
+                                <Label
+                                    Margin="0,-5,0,0"
+                                    FontSize="12"
+                                    LineBreakMode="TailTruncation"
+                                    Text="{Binding Artist}"
+                                    TextColor="Gray"
+                                    VerticalOptions="FillAndExpand" />
                             </StackLayout>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-            <StackLayout Orientation="Horizontal" HorizontalOptions="Fill" VerticalOptions="End">
-                <!--<BoxView BackgroundColor="#9068be" AbsoluteLayout.LayoutBounds="0, 0, 1000, 75" AbsoluteLayout.LayoutFlags="PositionProportional"></BoxView>
-                <Label Text="Master Playlist" FontSize="30" VerticalOptions="Center" HorizontalOptions="Center" BackgroundColor="#9068be" TextColor="White" AbsoluteLayout.LayoutBounds="0.5, 0, 200, 75" AbsoluteLayout.LayoutFlags="PositionProportional"/>-->
-                <Button Text="+" x:Name="AddSongsButton" Clicked="AddSongsButton_OnClicked" FontSize="20" HeightRequest="45" WidthRequest="45" BackgroundColor="#f44242" TextColor="White" AbsoluteLayout.LayoutBounds="315, 15, 40, 40"/>
-                <Label x:Name="RoomCodeLabel"/>
-                <Button x:Name="DeleteButton" Clicked="DeleteButton_OnClicked" Text="Delete"/>
-            </StackLayout>
-            <!--<BoxView BackgroundColor="#9068be" AbsoluteLayout.LayoutBounds="0, 1, 1000, 75" AbsoluteLayout.LayoutFlags="PositionProportional"></BoxView>-->
-        </AbsoluteLayout>
-    </ContentPage.Content>
-</ContentPage>
+                            <Label
+                                Margin="5,10"
+                                FontSize="14"
+                                HorizontalOptions="End"
+                                HorizontalTextAlignment="End"
+                                Text="{Binding DurationInSeconds, Converter={StaticResource SecondsToTimeConverter}}"
+                                TextColor="White"
+                                VerticalOptions="Center"
+                                VerticalTextAlignment="Center"
+                                WidthRequest="50" />
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </AbsoluteLayout>
+</ContentView>

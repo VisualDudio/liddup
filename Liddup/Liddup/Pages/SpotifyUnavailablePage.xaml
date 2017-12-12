@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="Liddup.Pages.SpotifyUnavailablePage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:Liddup.Controls;assembly=Liddup"
+    xmlns:ffsvg="clr-namespace:FFImageLoading.Svg.Forms;assembly=FFImageLoading.Svg.Forms"
+    xmlns:pagemodels="clr-namespace:Liddup.PageModels;assembly=Liddup"
+    BackgroundColor="Black">
+    <ContentView.BindingContext>
+        <pagemodels:SpotifyUnavailablePageModel />
+    </ContentView.BindingContext>
+    <StackLayout
+        Padding="20"
+        HorizontalOptions="CenterAndExpand"
+        Spacing="40"
+        VerticalOptions="StartAndExpand">
+        <ffsvg:SvgCachedImage
+            HeightRequest="150"
+            Source="resource://Liddup.Resources.logo_grey.svg"
+            WidthRequest="150" />
+        <Label
+            FontSize="20"
+            HorizontalOptions="Center"
+            HorizontalTextAlignment="Center"
+            Style="{StaticResource SubtitleStyle}"
+            Text="Uh oh! It looks like &#x0a; you haven't connected &#x0a; your Spotify account" />
+        <controls:BorderedButton
+            BackgroundColor="{StaticResource Green}"
+            Command="{Binding ConnectToSpotifyCommand}"
+            HorizontalOptions="Center"
+            Style="{StaticResource OpaqueButtonStyle}"
+            Text="Connect" />
+    </StackLayout>
+</ContentView>

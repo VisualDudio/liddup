@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="Liddup.Pages.SpotifyLibraryPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:pagemodels="clr-namespace:Liddup.PageModels;assembly=Liddup"
+    BackgroundColor="Black">
+    <ContentView.BindingContext>
+        <pagemodels:SpotifyLibraryPageModel />
+    </ContentView.BindingContext>
+
+    <StackLayout Padding="20" Spacing="20">
+        <Label
+            FontSize="22"
+            Style="{StaticResource TitleStyle}"
+            Text="My Library:"
+            TextColor="White" />
+        <Label
+            FontSize="20"
+            Style="{StaticResource SubtitleStyle}"
+            Text="Songs"
+            TextColor="White">
+            <Label.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding NavigateToSongsPageCommand}" />
+            </Label.GestureRecognizers>
+        </Label>
+        <Label
+            Margin="0,0,0,20"
+            FontSize="20"
+            Style="{StaticResource SubtitleStyle}"
+            Text="Playlists"
+            TextColor="White">
+            <Label.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding NavigateToPlaylistsPageCommand}" />
+            </Label.GestureRecognizers>
+        </Label>
+        <Label
+            FontSize="22"
+            Style="{StaticResource TitleStyle}"
+            Text="Worldwide:"
+            TextColor="White" />
+        <Label
+            FontSize="20"
+            Style="{StaticResource SubtitleStyle}"
+            Text="Top 40"
+            TextColor="White" />
+        <Label
+            FontSize="20"
+            Style="{StaticResource SubtitleStyle}"
+            Text="New Releases"
+            TextColor="White" />
+    </StackLayout>
+</ContentView>

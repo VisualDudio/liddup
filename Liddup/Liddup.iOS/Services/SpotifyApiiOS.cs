@@ -5,7 +5,8 @@ using Liddup.iOS.Delegates;
 using Liddup.iOS.Services;
 using Liddup.Services;
 using SafariServices;
-using SpotifyiOSSDK;
+using SpotifyAuthenticationBindingiOS;
+using SpotifyPlaybackBindingiOS;
 using UIKit;
 using Xamarin.Forms;
 
@@ -14,7 +15,9 @@ namespace Liddup.iOS.Services
 {
     internal class SpotifyApiiOS : SPTAudioStreamingDelegate, ISPTAudioStreamingDelegate, IUIApplicationDelegate, ISpotifyApi
     {
-        private SPTAuth _auth = SPTAuth.DefaultInstance;
+        private SPTAuth _auth;
+        private SPTAudioStreamingController _spotifyPlayer;
+        private UIViewController _authViewController;
         private const string ClientId = ApiConstants.SpotifyClientId;
         private readonly NSUrl _redirectUrl = new NSUrl(ApiConstants.SpotifyRedirectUri);
 
@@ -22,14 +25,7 @@ namespace Liddup.iOS.Services
 
         public bool IsLoggedIn => _spotifyPlayer != null && _spotifyPlayer.LoggedIn;
 
-        public SpotifyApiiOS()
-        {
-            var result = new NSString[strings.Count];
-            for (var i = 0; i < strings.Count; i++)
-                result[i] = new NSString(strings[i]);
-
-            return result;
-        }
+        public SpotifyApiiOS() { }
 
         public void Login()
         {
@@ -40,15 +36,15 @@ namespace Liddup.iOS.Services
         {
             var scopes = new[]
             {
-                Scopes.Streaming,
-                Scopes.PlaylistReadPrivate,
-                Scopes.UserLibraryRead,
-                Scopes.UserReadPrivate
+                SpotifyConstants.SPTAuthStreamingScope,
+                SpotifyConstants.SPTAuthPlaylistReadPrivateScope,
+                SpotifyConstants.SPTAuthUserLibraryReadScope,
+                SpotifyConstants.SPTAuthUserReadPrivateScope
             };
 
             _auth = SPTAuth.DefaultInstance;
             _spotifyPlayer = SPTAudioStreamingController.SharedInstance();
-            
+
             _auth.ClientID = ClientId;
             _auth.RequestedScopes = scopes;
             _auth.RedirectURL = _redirectUrl;
@@ -79,49 +75,48 @@ namespace Liddup.iOS.Services
                     AccessToken = _auth.Session.AccessToken;
                     _spotifyPlayer.LoginWithAccessToken(_auth.Session.AccessToken);
                 }
-            } 
+            }
             else
             {
-                var authUrl = new NSUrl(_auth.LoginURL.AbsoluteString.Replace("spotify-action://", "https://accounts.spotify.com/"));
-                
-                _authViewController = new SFSafariViewController(authUrl);
+                ((AppDelegate)UIApplication.SharedApplication.Delegate).OpenUrlDelegate += HandleOpenUrl;
 
-                
+                if (SPTAuth.SupportsApplicationAuthentication)
+                    UIApplication.SharedApplication.OpenUrl(_auth.SpotifyAppAuthenticationURL);
+                else
+                {
+                    _authViewController = new SFSafariViewController(_auth.SpotifyWebAuthenticationURL);
+                    UIApplication.SharedApplication.KeyWindow.RootViewController.PresentViewController(_authViewController, true, null);
+                }
             }
         }
 
-        private static void StartLoginFlow()
+        private void HandleOpenUrl(object sender, OpenUrlEventArgs e)
         {
-            
-        }
-
-        public bool OpenUrl(NSUrl url)
-        {
-            var auth = SPTAuth.DefaultInstance;
-            SPTAuthCallback authCallback = (error, session) =>
-            {
-                auth.Session = session;
-            };
-
-            if (!auth.CanHandleURL(url)) return false;
-
-            auth.HandleAuthCallbackWithTriggeredAuthURL(url, authCallback);
-            
-            return true;
-        }
-
-            _authViewController.PresentingViewController.DismissViewController(true, null);
-            _authViewController = null;
+            if (!_auth.CanHandleURL(e.Url)) return;
 
             _auth.HandleAuthCallbackWithTriggeredAuthURL(e.Url, (error, session) =>
             {
-                
+                if (error != null && session.IsValid)
+                {
+                    _auth.Session = session;
+                    _spotifyPlayer.LoginWithAccessToken(_auth.Session.AccessToken);
+                }
             });
         }
 
         public void PlayTrack(string uri)
         {
             _spotifyPlayer.PlaySpotifyURI(uri, 0, 0, null);
+        }
+
+        public void PauseTrack()
+        {
+
+        }
+
+        public void ResumeTrack()
+        {
+
         }
 
         public void Rewind()
@@ -149,31 +144,7 @@ namespace Liddup.iOS.Services
             _spotifyPlayer?.Logout();
         }
 
-        public void HandleNewSession()
-        {
-            SPTAuth auth = SPTAuth.DefaultInstance;
-
-            if (_spotifyPlayer == null)
-            {
-                _spotifyPlayer = SPTAudioStreamingController.SharedInstance();
-                NSError error = null;
-                if (_spotifyPlayer.StartWithClientId(auth.ClientID, null, true, out error))
-                {
-                    //_spotifyPlayer.Delegate = this;
-                    //_spotifyPlayer.PlaybackDelegate = this;
-                    //_spotifyPlayer.DiskCache = NSObject.Alloc(1024 * 1024 * 64);
-                    _spotifyPlayer.LoginWithAccessToken(auth.Session.AccessToken);
-
-                }
-                else
-                {
-                    _spotifyPlayer = null;
-
-                }
-            }
-        }
-
-        public void Dispose()
+        public new void Dispose()
         {
             throw new NotImplementedException();
         }

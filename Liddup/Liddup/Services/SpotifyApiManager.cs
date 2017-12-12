@@ -82,19 +82,36 @@ namespace Liddup.Services
             return list;
         }
 
-        public static void AddSongToMasterPlaylist(object item, ISongProvider sender)
+        public static async Task<List<FullTrack>> GetSearchResults(string query, CancellationToken token)
         {
-            var song = new Song
-            {
-                Uri = ((FullTrack)item).Uri,
-                Source = "Spotify",
-                Title = ((FullTrack)item).Name,
-                Votes = 0
-            };
+            token.ThrowIfCancellationRequested();
+            var searchResults = (await Spotify.SearchItemsAsync(query, SearchType.Track)).Tracks;
+            token.ThrowIfCancellationRequested();
+
+            //while (searchResults.Next != null)
+            //{
+            //    token.ThrowIfCancellationRequested();
+            //    searchResults = (await Spotify.SearchItemsAsync(query, SearchType.Track, 20, searchResults.Offset + searchResults.Limit)).Tracks;
+            //    token.ThrowIfCancellationRequested();
+            //    searchResults.Items.AddRange(searchResults.Items);
+            //}
+
+            return searchResults.Items;
+        }
+
+        public static void AddSongToQueue(Song song, ISongProvider sender)
+        {
+            //var song = new Song
+            //{
+            //    Uri = ((FullTrack)item).Uri,
+            //    Source = "Spotify",
+            //    Title = ((FullTrack)item).Name,
+            //    Votes = 0
+            //};
 
             try
             {
-                MessagingCenter.Send(sender, "AddSong", song);
+                song.AddToQueueCommand.Execute(null);
             }
             catch (Exception e)
             {
@@ -105,6 +122,16 @@ namespace Liddup.Services
         public static void PlayTrack(string uri)
         {
             DependencyService.Get<ISpotifyApi>().PlayTrack(uri);
+        }
+
+        public static void ResumeTrack()
+        {
+            DependencyService.Get<ISpotifyApi>().ResumeTrack();
+        }
+
+        public static void PauseTrack()
+        {
+            DependencyService.Get<ISpotifyApi>().PauseTrack();
         }
     }
 }

@@ -2,6 +2,9 @@
 using Foundation;
 using Liddup.iOS.Delegates;
 using UIKit;
+using CarouselView.FormsPlugin.iOS;
+using FFImageLoading.Forms.Touch;
+using FFImageLoading.Svg.Forms;
 
 namespace Liddup.iOS
 {
@@ -22,6 +25,11 @@ namespace Liddup.iOS
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             global::Xamarin.Forms.Forms.Init();
+            CachedImageRenderer.Init();
+            FormsCommunityToolkit.Effects.iOS.Effects.Init();
+            CarouselViewRenderer.Init();
+            var ignore = typeof(SvgCachedImage);
+
             LoadApplication(new App());
 
             return base.FinishedLaunching(app, options);
@@ -36,7 +44,7 @@ namespace Liddup.iOS
                 Options = options
             });
 
-            return base.OpenUrl(app, url, options);
+            return true;
         }
     }
 }

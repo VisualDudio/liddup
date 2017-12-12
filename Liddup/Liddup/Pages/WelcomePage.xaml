@@ -1,25 +1,106 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:Liddup"
-             x:Class="Liddup.Pages.WelcomePage"
-             NavigationPage.HasNavigationBar="False">
-    <!--This is the page the app starts in, it will probably have just a Host button and a Join button. The other alternative is
-        to have a Host button and then a list of nearby playlists a user can join. If you choose the former, we need an additional
-        Content Page titled something like "NearbyPlaylistsPage". Also it would be nice to call the 'playlists' something less verbose.
-        
-        Note: All navigation will be done in the code-behind
-        
-        The navigation flow should be: WelcomePage -> CreateRoomPage (if user clicks Host) | MasterPlaylistPage (if user clicks a nearby playlist)
-        -> MusicServicesPage (if user clicks the 'add songs' button) -> UserPlaylistsPage (if user clicks a music provider)
-        -> MasterPlaylistPage (if user clicks 'add to master playlist' button)-->
+<ContentPage
+    x:Class="Liddup.Pages.WelcomePage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:behaviors="clr-namespace:Liddup.Behaviors;assembly=Liddup"
+    xmlns:controls="clr-namespace:Liddup.Controls;assembly=Liddup"
+    xmlns:effects="clr-namespace:Liddup.Effects;assembly=Liddup"
+    xmlns:fcteffects="clr-namespace:FormsCommunityToolkit.Effects;assembly=FormsCommunityToolkit.Effects"
+    xmlns:ffsvg="clr-namespace:FFImageLoading.Svg.Forms;assembly=FFImageLoading.Svg.Forms"
+    xmlns:local="clr-namespace:Liddup.Pages"
+    NavigationPage.HasNavigationBar="False">
+    <ContentPage.Padding>
+        <OnPlatform x:TypeArguments="Thickness">
+            <On Platform="iOS" Value="0, 20, 0, 0" />
+            <On Platform="Android, WinPhone, UWP" Value="0,0,0,0" />
+        </OnPlatform>
+    </ContentPage.Padding>
+    <AbsoluteLayout BackgroundColor="Black">
+        <Image
+            AbsoluteLayout.LayoutBounds="0, 0, 1, 600"
+            AbsoluteLayout.LayoutFlags="PositionProportional, WidthProportional"
+            Aspect="AspectFill"
+            Source="crowd_gradient_colored.png"
+            VerticalOptions="StartAndExpand" />
+        <ffsvg:SvgCachedImage
+            Margin="0,40,0,0"
+            AbsoluteLayout.LayoutBounds="0.5, 0, 300, 100"
+            AbsoluteLayout.LayoutFlags="PositionProportional"
+            HeightRequest="100"
+            Source="resource://Liddup.Resources.liddup_wordmark_white.svg"
+            VerticalOptions="Start"
+            WidthRequest="300" />
 
-    <AbsoluteLayout BackgroundColor="#e1e8f0">
-        <Image Source="liddup_logo.png" VerticalOptions="Center" HorizontalOptions="Center" AbsoluteLayout.LayoutBounds="0.5, 0, 0.75, 0.25" AbsoluteLayout.LayoutFlags="PositionProportional, SizeProportional"/>
-        <StackLayout AbsoluteLayout.LayoutBounds="0.5, 0.5" AbsoluteLayout.LayoutFlags="PositionProportional">
-            <Button x:Name="HostButton" Clicked="HostButton_OnClicked" Text="Host" FontSize="44" HeightRequest="100" WidthRequest="200" VerticalOptions="Center" HorizontalOptions="Center" BackgroundColor="#6ed3cf" TextColor="White" Margin="0,0,0,30"/>
-            <Entry x:Name="RoomCodeEntry" Placeholder="Room Code"></Entry>
-            <Button x:Name="JoinButton" Clicked="JoinButton_OnClicked" Text="Join" FontSize="44" HeightRequest="100" WidthRequest="200" VerticalOptions="Center" HorizontalOptions="Center" BackgroundColor="#6ed3cf" TextColor="White" />
+        <StackLayout
+            Margin="0,100,0,0"
+            AbsoluteLayout.LayoutBounds="0.5, 0.5, 1, 1"
+            AbsoluteLayout.LayoutFlags="All"
+            HorizontalOptions="Center"
+            VerticalOptions="Center">
+            <Label
+                Margin="0,0,0,10"
+                FontSize="24"
+                Style="{StaticResource TitleStyle}"
+                Text="Enter your invite code"
+                TextColor="White" />
+
+            <controls:UnderlinedEntry
+                x:Name="roomCodeEntry"
+                Margin="0,0,0,10"
+                BackgroundColor="Transparent"
+                BorderColor="White"
+                FontSize="28"
+                HorizontalTextAlignment="Center"
+                LetterSpacing="0.3"
+                TextColor="White">
+                <controls:UnderlinedEntry.FontFamily>
+                    <OnPlatform x:TypeArguments="x:String">
+                        <On Platform="iOS" Value="GlacialIndifference-Regular" />
+                        <On Platform="Android" Value="GlacialIndifference-Regular.otf#GlacialIndifference-Regular" />
+                    </OnPlatform>
+                </controls:UnderlinedEntry.FontFamily>
+                <controls:UnderlinedEntry.Effects>
+                    <fcteffects:EntryCapitalizeKeyboard />
+                    <fcteffects:EntryDisableAutoCorrect />
+                </controls:UnderlinedEntry.Effects>
+                <controls:UnderlinedEntry.Behaviors>
+                    <behaviors:EntryLengthValidatorBehavior MaxLength="8" />
+                </controls:UnderlinedEntry.Behaviors>
+            </controls:UnderlinedEntry>
+
+            <controls:BorderedButton
+                Command="{Binding JoinRoomCommand}"
+                CommandParameter="{Binding Source={x:Reference roomCodeEntry}, Path=Text}"
+                FontSize="20"
+                HorizontalOptions="Center"
+                Style="{StaticResource TransparentButtonStyle}"
+                Text="Join" />
+
+            <ActivityIndicator
+                HorizontalOptions="Center"
+                IsRunning="{Binding IsBusy}"
+                Color="{StaticResource Red}" />
+            <Label
+                HorizontalOptions="Center"
+                IsVisible="{Binding IsBusy}"
+                Style="{StaticResource SubtitleStyle}"
+                Text="Joining room..." />
+
+            <Label
+                Margin="0,100,0,0"
+                FontSize="18"
+                HorizontalOptions="Center"
+                Style="{StaticResource SubtitleStyle}"
+                Text="Or host your own room"
+                TextColor="{StaticResource Red}">
+                <Label.Effects>
+                    <effects:UnderlineEffect />
+                </Label.Effects>
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding CreateRoomCommand}" />
+                </Label.GestureRecognizers>
+            </Label>
         </StackLayout>
     </AbsoluteLayout>
 </ContentPage>

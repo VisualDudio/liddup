@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="Liddup.Pages.SearchResultsPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:Liddup.Controls;assembly=Liddup"
+    xmlns:ff="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+    xmlns:ffsvg="clr-namespace:FFImageLoading.Svg.Forms;assembly=FFImageLoading.Svg.Forms"
+    xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
+    xmlns:flv="clr-namespace:DLToolkit.Forms.Controls;assembly=DLToolkit.Forms.Controls.FlowListView"
+    xmlns:pagemodels="clr-namespace:Liddup.PageModels;assembly=Liddup"
+    xmlns:xl="clr-namespace:XLabs.Forms.Controls;assembly=XLabs.Forms"
+    BackgroundColor="Black">
+    <ContentView.BindingContext>
+        <pagemodels:SearchResultsPageModel />
+    </ContentView.BindingContext>
+    <StackLayout Margin="20">
+        <Label
+            FontSize="14"
+            HorizontalOptions="Center"
+            HorizontalTextAlignment="Center"
+            Style="{StaticResource TitleStyle}"
+            Text="Double tap to add or remove a song you added from the queue" />
+        <flv:FlowListView
+            x:Name="SearchResults"
+            FlowColumnMinWidth="125"
+            FlowIsLoadingInfiniteEnabled="True"
+            FlowItemsSource="{Binding SearchResults}"
+            HasUnevenRows="False"
+            RowHeight="200">
+            <x:Arguments>
+                <ListViewCachingStrategy>
+                    RetainElement
+                </ListViewCachingStrategy>
+            </x:Arguments>
+            <flv:FlowListView.FlowColumnTemplate>
+                <DataTemplate>
+                    <StackLayout Padding="15">
+                        <controls:ViewFlipper RotationDirection="Horizontal">
+                            <controls:ViewFlipper.FrontView>
+                                <ff:CachedImage
+                                    Aspect="AspectFill"
+                                    HeightRequest="125"
+                                    IsOpaque="True"
+                                    Source="{Binding ImageUrl}">
+                                    <ff:CachedImage.Transformations>
+                                        <fftransformations:RoundedTransformation>
+                                            <fftransformations:RoundedTransformation.Radius>15</fftransformations:RoundedTransformation.Radius>
+                                        </fftransformations:RoundedTransformation>
+                                    </ff:CachedImage.Transformations>
+                                </ff:CachedImage>
+                            </controls:ViewFlipper.FrontView>
+                            <controls:ViewFlipper.BackView>
+                                <AbsoluteLayout>
+                                    <ff:CachedImage
+                                        AbsoluteLayout.LayoutBounds="0, 0, 1, 1"
+                                        AbsoluteLayout.LayoutFlags="All"
+                                        Aspect="AspectFill"
+                                        HeightRequest="125"
+                                        Opacity="0.4"
+                                        Source="{Binding ImageUrl}">
+                                        <ff:CachedImage.Transformations>
+                                            <fftransformations:RoundedTransformation>
+                                                <fftransformations:RoundedTransformation.Radius>15</fftransformations:RoundedTransformation.Radius>
+                                            </fftransformations:RoundedTransformation>
+                                        </ff:CachedImage.Transformations>
+                                    </ff:CachedImage>
+                                    <StackLayout
+                                        AbsoluteLayout.LayoutBounds="0, 0, 1, 1"
+                                        AbsoluteLayout.LayoutFlags="All"
+                                        HorizontalOptions="Center"
+                                        Orientation="Horizontal"
+                                        Spacing="20"
+                                        VerticalOptions="Center">
+                                        <ffsvg:SvgCachedImage
+                                            Aspect="AspectFill"
+                                            HeightRequest="25"
+                                            IsOpaque="True"
+                                            Source="{Binding HeartIcon}"
+                                            VerticalOptions="Center"
+                                            WidthRequest="25">
+                                            <ffsvg:SvgCachedImage.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding ToggleVoteCommand}" />
+                                            </ffsvg:SvgCachedImage.GestureRecognizers>
+                                        </ffsvg:SvgCachedImage>
+                                        <Label
+                                            HorizontalOptions="Start"
+                                            HorizontalTextAlignment="End"
+                                            Text="{Binding Votes}"
+                                            TextColor="White"
+                                            VerticalOptions="Center"
+                                            VerticalTextAlignment="Center" />
+                                    </StackLayout>
+                                </AbsoluteLayout>
+                            </controls:ViewFlipper.BackView>
+                        </controls:ViewFlipper>
+
+                        <Label
+                            HorizontalOptions="Fill"
+                            HorizontalTextAlignment="Start"
+                            Style="{StaticResource TitleStyle}"
+                            Text="{Binding Title}"
+                            VerticalOptions="End" />
+                        <Label
+                            HorizontalOptions="Fill"
+                            HorizontalTextAlignment="Start"
+                            Style="{StaticResource SubtitleStyle}"
+                            Text="{Binding Artist}"
+                            VerticalOptions="Start" />
+                    </StackLayout>
+                </DataTemplate>
+            </flv:FlowListView.FlowColumnTemplate>
+        </flv:FlowListView>
+    </StackLayout>
+</ContentView>

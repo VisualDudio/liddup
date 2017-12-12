@@ -1,79 +1,58 @@
-﻿using System;
+﻿using PropertyChanged;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows.Input;
+using Xamarin.Forms;
 
 namespace Liddup.Models
 {
-    public class Song : INotifyPropertyChanged
+    [AddINotifyPropertyChangedInterface]
+    public class Song
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private int _votes;
-        private bool _isPlaying;
-        private int _skips;
-        private bool _didVote;
-
+        public string Title { get; set; } = "Unavailable";
+        public string Artist { get; set; } = "Unavailable";
+        public string HeartIcon { get; set; } = "resource://Liddup.Resources.heart_hollow.svg";
+        public int Votes { get; set; }
+        public int SkipVotes { get; set; }
+        public int RepeatVotes { get; set; }
+        public int DurationInSeconds { get; set; } = 1;
+        public string ImageUrl { get; set; }
+        public bool IsInQueue { get; set; }
+        public bool IsPlaying { get; set; }
+        public bool IsVoted { get; set; }
+        public bool IsSkipVoted { get; set; }
+        public bool IsRepeatVoted { get; set; }
         public string Id { get; set; }
-        public string Title { get; set; }
         public string Uri { get; set; }
         public string Source { get; set; }
-        public object AlbumArt { get; set; }
         public byte[] Contents { get; set; }
 
-        public bool IsPlaying
-        {
-            get => _isPlaying;
-            set
-            {
-                if (_isPlaying == value)
-                    return;
-                _isPlaying = value;
+        ICommand _toggleVoteCommand;
+        public ICommand ToggleVoteCommand => _toggleVoteCommand ?? (_toggleVoteCommand = new Command(() => ToggleVote()));
 
-                OnPropertyChanged();
+        ICommand _addToQueueCommand;
+        public ICommand AddToQueueCommand => _addToQueueCommand ?? (_addToQueueCommand = new Command(() => AddToQueue()));
+
+        public void ToggleVote()
+        {
+            IsVoted = !IsVoted;
+            if (IsVoted)
+            {
+                HeartIcon = "resource://Liddup.Resources.heart_filled.svg";
+                Votes++;
             }
+            else
+            {
+                HeartIcon = "resource://Liddup.Resources.heart_hollow.svg";
+                Votes--;
+            }
+            MessagingCenter.Send(this, "UpdateSong", this);
         }
 
-        public int Votes
+        private void AddToQueue()
         {
-            get => _votes;
-            set
-            {
-                if (_votes == value)
-                    return;
-                _votes = value;
-
-                OnPropertyChanged();
-            }
-        }
-
-        public int Skips
-        {
-            get => _skips;
-            set
-            {
-                if (_skips == value)
-                    return;
-                _skips = value;
-
-                OnPropertyChanged();
-            }
-        }
-
-        public bool DidVote
-        {
-            get => _didVote;
-            set
-            {
-                if (_didVote == value)
-                    return;
-                _didVote = value;
-
-                OnPropertyChanged();
-            }
+            IsInQueue = true;
+            ToggleVote();
+            MessagingCenter.Send(this, "AddSong", this);
         }
 
         public Dictionary<string, object> ToDictionary()
@@ -83,17 +62,12 @@ namespace Liddup.Models
                 {"title", Title },
                 {"uri", Uri },
                 {"source", Source },
-                {"votes", _votes },
-                {"isPlaying", _isPlaying },
-                {"skips", _skips }
+                {"votes", Votes },
+                {"isPlaying", IsPlaying },
+                {"skipVotes", SkipVotes }
             };
 
             return dictionary;
-        }
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

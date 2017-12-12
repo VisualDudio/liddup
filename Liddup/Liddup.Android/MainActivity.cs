@@ -3,16 +3,17 @@
 using Android.App;
 using Android.Content;
 using Android.Content.PM;
-using Android.Net.Wifi;
 using Android.OS;
 using Liddup.Droid.Delegates;
 using Liddup.Droid.Services;
 using Xamarin.Forms;
-using Liddup.Pages;
+using CarouselView.FormsPlugin.Android;
+using FFImageLoading.Forms.Droid;
+using FFImageLoading.Svg.Forms;
 
 namespace Liddup.Droid
 {
-    [Activity(Label = "Liddup", Icon = "@drawable/icon", Theme = "@style/MainTheme", MainLauncher = true,
+    [Activity(Label = "Liddup", Icon = "@drawable/icon", Theme = "@style/MainTheme",
         ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
 
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
@@ -30,6 +31,11 @@ namespace Liddup.Droid
             base.OnCreate(bundle);
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
+
+            CachedImageRenderer.Init();
+            CarouselViewRenderer.Init();
+            var ignore = typeof(SvgCachedImage);
+
             LoadApplication(new App());
         }
 
