@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentView
+    x:Class="Liddup.Pages.PlaylistsPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:behaviors="clr-namespace:Liddup.Behaviors;assembly=Liddup"
+    xmlns:converters="clr-namespace:Liddup.Converters;assembly=Liddup"
+    xmlns:ff="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+    xmlns:ffsvg="clr-namespace:FFImageLoading.Svg.Forms;assembly=FFImageLoading.Svg.Forms"
+    xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
+    xmlns:pagemodels="clr-namespace:Liddup.PageModels;assembly=Liddup"
+    BackgroundColor="Black">
+    <ContentView.BindingContext>
+        <pagemodels:PlaylistsPageModel />
+    </ContentView.BindingContext>
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <converters:ItemTappedEventArgsConverter x:Key="ItemTappedConverter" />
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <StackLayout Padding="20">
+        <Grid HorizontalOptions="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <ffsvg:SvgCachedImage
+                Aspect="AspectFill"
+                IsOpaque="True"
+                Source="resource://Liddup.Resources.chevron_white.svg"
+                VerticalOptions="Center">
+                <ffsvg:SvgCachedImage.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding NavigateToSpotifyLibraryCommand}" />
+                </ffsvg:SvgCachedImage.GestureRecognizers>
+            </ffsvg:SvgCachedImage>
+            <Label
+                Grid.Column="1"
+                FontSize="24"
+                HorizontalTextAlignment="Center"
+                Style="{StaticResource TitleStyle}"
+                Text="My Playlists"
+                VerticalOptions="Center" />
+        </Grid>
+
+        <ListView
+            BackgroundColor="Black"
+            CachingStrategy="RecycleElement"
+            ItemsSource="{Binding Playlists}"
+            RowHeight="80">
+            <ListView.Behaviors>
+                <behaviors:EventToCommandBehavior
+                    Command="{Binding NavigateToPlaylistSongsCommand}"
+                    EventArgsConverter="{StaticResource ItemTappedConverter}"
+                    EventName="ItemTapped" />
+            </ListView.Behaviors>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Grid ColumnSpacing="20" VerticalOptions="Center">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="70" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="70" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <ff:CachedImage
+                                Margin="0,0,0,0"
+                                Aspect="AspectFill"
+                                IsOpaque="True"
+                                Source="{Binding ImageUrl}">
+                                <ff:CachedImage.Transformations>
+                                    <fftransformations:RoundedTransformation>
+                                        <fftransformations:RoundedTransformation.Radius>15</fftransformations:RoundedTransformation.Radius>
+                                    </fftransformations:RoundedTransformation>
+                                </ff:CachedImage.Transformations>
+                            </ff:CachedImage>
+                            <StackLayout
+                                Grid.Column="1"
+                                Margin="0,0,0,0"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center">
+                                <Label
+                                    FontSize="18"
+                                    LineBreakMode="TailTruncation"
+                                    Style="{StaticResource TitleStyle}"
+                                    Text="{Binding Name}"
+                                    VerticalOptions="Start" />
+                                <Label
+                                    FontSize="16"
+                                    LineBreakMode="TailTruncation"
+                                    Style="{StaticResource SubtitleStyle}"
+                                    Text="{Binding NumberOfTracks, StringFormat='{0} tracks'}"
+                                    VerticalOptions="End" />
+                            </StackLayout>
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </StackLayout>
+</ContentView>

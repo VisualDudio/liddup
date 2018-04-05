@@ -1,9 +1,5 @@
-﻿using Liddup.Pages;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿using DLToolkit.Forms.Controls;
+using Liddup.PageModels;
 using Xamarin.Forms;
 
 namespace Liddup
@@ -13,8 +9,11 @@ namespace Liddup
         public App()
         {
             InitializeComponent();
+
+            FlowListView.Init();
             Couchbase.Lite.Storage.SystemSQLite.Plugin.Register();
-            MainPage = new NavigationPage(new WelcomePage());
+
+            MainPage = new FreshMvvm.FreshNavigationContainer(FreshMvvm.FreshPageModelResolver.ResolvePageModel<WelcomePageModel>());
         }
 
         protected override void OnStart()

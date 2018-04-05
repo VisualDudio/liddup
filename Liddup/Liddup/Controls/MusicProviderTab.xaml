@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<Grid
+    x:Class="Liddup.Controls.MusicProviderTab"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:ffsvg="clr-namespace:FFImageLoading.Svg.Forms;assembly=FFImageLoading.Svg.Forms">
+    <Grid.RowDefinitions>
+        <RowDefinition Height="25" />
+        <RowDefinition Height="2" />
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="25" />
+        <ColumnDefinition Width="*" />
+    </Grid.ColumnDefinitions>
+    <ffsvg:SvgCachedImage
+        Aspect="AspectFill"
+        HorizontalOptions="Start"
+        IsOpaque="True"
+        Source="{Binding CurrentIcon}"
+        VerticalOptions="Center" />
+    <Label
+        Grid.Column="1"
+        FontSize="20"
+        HorizontalOptions="End"
+        Style="{StaticResource TitleStyle}"
+        Text="{Binding Text}"
+        TextColor="{Binding CurrentColor}"
+        VerticalOptions="Center"
+        VerticalTextAlignment="Center" />
+    <BoxView
+        Grid.Row="1"
+        Grid.ColumnSpan="2"
+        BackgroundColor="{Binding CurrentColor}"
+        IsVisible="{Binding IsActive}" />
+</Grid>

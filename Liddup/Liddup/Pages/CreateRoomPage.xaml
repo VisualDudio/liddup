@@ -1,15 +1,84 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Liddup.Pages.CreateRoomPage"
-             NavigationPage.HasNavigationBar="False">
-    <ContentPage.Content>
-        <StackLayout>
-            <!--This page is for a user to host/create a master playlist. He/She should be able to name it too. UI-wise this
-            page should contain an entry and a button, and should navigate the user to the MasterPlaylistPage.-->
-            <Entry Placeholder="Room Name"/>
-            <Label x:Name="RoomNameLabel"/>
-            <Button x:Name="CreateRoomButton" Text="Create" Clicked="CreateRoomButton_OnClicked"/>
+<ContentPage
+    x:Class="Liddup.Pages.CreateRoomPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:Liddup.Controls;assembly=Liddup"
+    xmlns:ffsvg="clr-namespace:FFImageLoading.Svg.Forms;assembly=FFImageLoading.Svg.Forms"
+    BackgroundColor="Black"
+    NavigationPage.HasNavigationBar="False">
+    <ContentPage.Padding>
+        <OnPlatform x:TypeArguments="Thickness">
+            <On Platform="iOS" Value="0, 20, 0, 0" />
+            <On Platform="Android, WinPhone, UWP" Value="0,0,0,0" />
+        </OnPlatform>
+    </ContentPage.Padding>
+    <StackLayout
+        HorizontalOptions="CenterAndExpand"
+        Spacing="30"
+        VerticalOptions="CenterAndExpand">
+        <Label
+            FontSize="24"
+            HorizontalTextAlignment="Center"
+            Style="{StaticResource TitleStyle}"
+            Text="Set a name for your room"
+            VerticalTextAlignment="Center" />
+        <controls:UnderlinedEntry
+            BackgroundColor="Transparent"
+            BorderColor="White"
+            FontSize="28"
+            HorizontalTextAlignment="Center"
+            Text="{Binding Name, Mode=OneWayToSource}"
+            TextColor="White">
+            <controls:UnderlinedEntry.FontFamily>
+                <OnPlatform x:TypeArguments="x:String">
+                    <On Platform="iOS" Value="GlacialIndifference-Regular" />
+                    <On Platform="Android" Value="GlacialIndifference-Regular.otf#GlacialIndifference-Regular" />
+                </OnPlatform>
+            </controls:UnderlinedEntry.FontFamily>
+        </controls:UnderlinedEntry>
+        <StackLayout
+            Margin="0,0,0,40"
+            HorizontalOptions="Center"
+            Orientation="Horizontal"
+            Spacing="25">
+            <Label
+                Style="{StaticResource TitleStyle}"
+                Text="Allow explicit songs: "
+                VerticalOptions="Center" />
+            <Switch IsToggled="{Binding ExplicitSongsAllowed, Mode=OneWayToSource}" VerticalOptions="Center" />
         </StackLayout>
-    </ContentPage.Content>
+
+        <Label
+            HorizontalOptions="Center"
+            Style="{StaticResource TitleStyle}"
+            Text="Song limit per user" />
+        <Slider
+            x:Name="SongRequestSlider"
+            HorizontalOptions="Center"
+            Maximum="5"
+            Minimum="0"
+            WidthRequest="300"
+            Value="{Binding SongRequestLimit, Mode=OneWayToSource}" />
+        <Label
+            Margin="0,0,0,40"
+            HorizontalOptions="Center"
+            Style="{StaticResource TitleStyle}"
+            Text="{Binding Source={x:Reference SongRequestSlider}, Path=Value}" />
+
+        <ActivityIndicator
+            HeightRequest="50"
+            HorizontalOptions="Center"
+            IsRunning="{Binding IsBusy}"
+            IsVisible="{Binding IsBusy}"
+            WidthRequest="50"
+            Color="{StaticResource Red}" />
+
+        <controls:BorderedButton
+            Command="{Binding CreateRoomCommand}"
+            FontSize="14"
+            HorizontalOptions="Center"
+            Style="{StaticResource OpaqueButtonStyle}"
+            Text="Create Room" />
+    </StackLayout>
 </ContentPage>
